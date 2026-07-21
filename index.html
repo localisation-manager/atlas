@@ -298,6 +298,30 @@
     font-weight: 500;
   }
 
+  .track-add {
+    margin-left: auto;
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--hint);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1;
+    transition: all 0.15s;
+  }
+
+  .track-add:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-faded);
+  }
+
   .track-items {
     overflow: hidden;
     transition: max-height 0.35s ease;
@@ -637,8 +661,6 @@
       <div class="legend-item"><div class="legend-swatch" style="background:var(--amber-light);border:1.5px dashed var(--amber);"></div>Tentative</div>
     </div>
   </div>
-
-  <p class="footer-note">* Hindi is included in the approved budget; Hebrew was recently requested by GM &mdash; ETA for expansion to that market is Q3/Q4. Aiming to launch both as the first full locales via Atlas.</p>
 </div>
 
 <!-- Tooltip -->
@@ -880,8 +902,16 @@ function renderTracks() {
       </svg>
       <span class="track-name" style="color:${trackColor}">${track.name}</span>
       <span class="track-count">${visibleItems.length}</span>
+      <button class="track-add" title="Add item to ${track.name}">+</button>
     `;
-    header.addEventListener('click', () => {
+
+    header.querySelector('.track-add').addEventListener('click', (e) => {
+      e.stopPropagation();
+      openAddModal(tIdx);
+    });
+
+    header.addEventListener('click', (e) => {
+      if (e.target.closest('.track-add')) return;
       track.collapsed = !track.collapsed;
       render();
     });
@@ -1023,7 +1053,7 @@ function hideTooltip() { tooltip.classList.remove('visible'); }
 const overlay = document.getElementById('modal-overlay');
 
 function openModal(trackIdx, itemIdx, segIdx) {
-  editContext = { trackIdx, itemIdx, segIdx };
+  editContext = { trackIdx, itemIdx, segIdx, isNew: false };
   const item = data.tracks[trackIdx].items[itemIdx];
   const seg = item.segments[segIdx];
 
@@ -1034,6 +1064,23 @@ function openModal(trackIdx, itemIdx, segIdx) {
   document.getElementById('edit-start').value = seg.start;
   document.getElementById('edit-end').value = seg.end;
   document.getElementById('edit-notes').value = item.note || '';
+  document.getElementById('edit-delete').style.display = '';
+
+  overlay.classList.add('visible');
+  document.getElementById('edit-name').focus();
+}
+
+function openAddModal(trackIdx) {
+  editContext = { trackIdx, isNew: true };
+
+  document.getElementById('modal-title').textContent = 'Add item to ' + data.tracks[trackIdx].name;
+  document.getElementById('edit-name').value = '';
+  document.getElementById('edit-status').value = 'tentative';
+  document.getElementById('edit-label').value = '';
+  document.getElementById('edit-start').value = '';
+  document.getElementById('edit-end').value = '';
+  document.getElementById('edit-notes').value = '';
+  document.getElementById('edit-delete').style.display = 'none';
 
   overlay.classList.add('visible');
   document.getElementById('edit-name').focus();
@@ -1050,16 +1097,37 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal()
 
 document.getElementById('edit-save').addEventListener('click', () => {
   if (!editContext) return;
-  const { trackIdx, itemIdx, segIdx } = editContext;
-  const item = data.tracks[trackIdx].items[itemIdx];
-  const seg = item.segments[segIdx];
+  const { trackIdx } = editContext;
+  const name = document.getElementById('edit-name').value.trim();
+  const start = document.getElementById('edit-start').value;
+  const end = document.getElementById('edit-end').value;
 
-  item.name = document.getElementById('edit-name').value.trim();
-  seg.status = document.getElementById('edit-status').value;
-  seg.label = document.getElementById('edit-label').value.trim();
-  seg.start = document.getElementById('edit-start').value;
-  seg.end = document.getElementById('edit-end').value;
-  item.note = document.getElementById('edit-notes').value.trim();
+  if (!name || !start || !end) return;
+
+  if (editContext.isNew) {
+    data.tracks[trackIdx].items.push({
+      id: 'item-' + Date.now(),
+      name: name,
+      note: document.getElementById('edit-notes').value.trim(),
+      segments: [{
+        start: start,
+        end: end,
+        status: document.getElementById('edit-status').value,
+        label: document.getElementById('edit-label').value.trim() || name
+      }]
+    });
+  } else {
+    const { itemIdx, segIdx } = editContext;
+    const item = data.tracks[trackIdx].items[itemIdx];
+    const seg = item.segments[segIdx];
+
+    item.name = name;
+    seg.status = document.getElementById('edit-status').value;
+    seg.label = document.getElementById('edit-label').value.trim();
+    seg.start = start;
+    seg.end = end;
+    item.note = document.getElementById('edit-notes').value.trim();
+  }
 
   closeModal();
   render();
