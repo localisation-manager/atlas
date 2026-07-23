@@ -300,6 +300,7 @@
 
   .track-add {
     margin-left: auto;
+    flex-shrink: 0;
     width: 24px;
     height: 24px;
     border-radius: 6px;
@@ -320,6 +321,30 @@
     border-color: var(--accent);
     color: var(--accent);
     background: var(--accent-faded);
+  }
+
+  .track-delete {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--hint);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1;
+    transition: all 0.15s;
+    margin-left: 4px;
+  }
+
+  .track-delete:hover {
+    border-color: #cc3333;
+    color: #cc3333;
+    background: #fce8e8;
   }
 
   .track-items {
@@ -932,11 +957,20 @@ function renderTracks() {
       <span class="track-name" style="color:${trackColor}">${track.name}</span>
       <span class="track-count">${visibleItems.length}</span>
       <button class="track-add" title="Add item to ${track.name}">+</button>
+      <button class="track-delete" title="Delete track">&times;</button>
     `;
 
     header.querySelector('.track-add').addEventListener('click', (e) => {
       e.stopPropagation();
       openAddModal(tIdx);
+    });
+
+    header.querySelector('.track-delete').addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (!confirm('Delete "' + track.name + '" and all its items?')) return;
+      data.tracks.splice(tIdx, 1);
+      saveData();
+      render();
     });
 
     header.addEventListener('click', (e) => {
