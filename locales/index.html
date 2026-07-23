@@ -798,6 +798,13 @@ document.getElementById('f-name').addEventListener('input', function() {
       langHint.className = 'form-hint';
       langHint.textContent = '';
       this.classList.remove('error');
+      // Auto-switch to variant if a default already exists for this language
+      var existingDefault = locales.find(function(l) {
+        return l.code.split('-')[0] === code && l.isDefault;
+      });
+      if (existingDefault) {
+        document.getElementById('f-default').value = 'no';
+      }
     }
   } else {
     langHint.className = 'form-hint';
