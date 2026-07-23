@@ -329,6 +329,26 @@
 
   .track-items.collapsed { max-height: 0 !important; }
 
+  .add-track-btn {
+    width: 100%;
+    padding: 12px;
+    border: 1px dashed var(--border);
+    border-top: none;
+    background: none;
+    color: var(--hint);
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .add-track-btn:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--accent-faded);
+  }
+
   /* ── Item rows ── */
   .item-row {
     display: grid;
@@ -995,6 +1015,25 @@ function renderTracks() {
     trackEl.appendChild(itemsWrap);
     container.appendChild(trackEl);
   });
+
+  // Add track button
+  const addTrackBtn = document.createElement('button');
+  addTrackBtn.className = 'add-track-btn';
+  addTrackBtn.textContent = '+ Add track';
+  addTrackBtn.addEventListener('click', () => {
+    const name = prompt('Track name:');
+    if (!name || !name.trim()) return;
+    data.tracks.push({
+      id: 'track-' + Date.now(),
+      name: name.trim(),
+      color: 'blue',
+      collapsed: false,
+      items: []
+    });
+    saveData();
+    render();
+  });
+  container.appendChild(addTrackBtn);
 }
 
 function renderTodayHeader() {
