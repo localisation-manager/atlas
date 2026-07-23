@@ -380,10 +380,12 @@
     cursor: pointer;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
     z-index: 1;
+    width: fit-content;
+    transform: translateX(-50%);
   }
 
   .bar:hover {
-    transform: translateY(-1px) scale(1.01);
+    transform: translateX(-50%) translateY(-1px) scale(1.01);
     box-shadow: 0 3px 8px rgba(0,0,0,0.1);
     z-index: 2;
   }
@@ -397,8 +399,6 @@
     font-weight: 600;
     white-space: nowrap;
     padding: 0 10px;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 
   .bar.shipped  .bar-label { color: var(--green-text); }
@@ -688,15 +688,9 @@
         <input type="text" id="edit-label">
       </div>
     </div>
-    <div class="field-row">
-      <div class="field">
-        <label>Start date</label>
-        <input type="date" id="edit-start">
-      </div>
-      <div class="field">
-        <label>End date</label>
-        <input type="date" id="edit-end">
-      </div>
+    <div class="field">
+      <label>ETA</label>
+      <input type="date" id="edit-eta">
     </div>
     <div class="field">
       <label>Notes</label>
@@ -714,7 +708,9 @@
 /* ================================================================
    DATA
    ================================================================ */
-const data = {
+const STORAGE_KEY = 'atlas-roadmap-data';
+
+const DEFAULT_DATA = {
   tracks: [
     {
       id: 'locale-rollout',
@@ -727,7 +723,7 @@ const data = {
           name: 'Serbian, Albanian',
           note: 'Scheduled for August 21 launch',
           segments: [
-            { start: '2026-08-01', end: '2026-08-31', status: 'dated', label: 'Aug 21' }
+            { eta: '2026-08-21', status: 'dated', label: 'Aug 21' }
           ]
         },
         {
@@ -735,7 +731,7 @@ const data = {
           name: 'Czech, Ukrainian',
           note: 'Scheduled for September 18 launch',
           segments: [
-            { start: '2026-09-01', end: '2026-09-30', status: 'dated', label: 'Sep 18' }
+            { eta: '2026-09-18', status: 'dated', label: 'Sep 18' }
           ]
         },
         {
@@ -743,7 +739,7 @@ const data = {
           name: 'Hindi, Hebrew*',
           note: 'Hindi included in approved budget; Hebrew recently requested by GM — ETA Q3/Q4',
           segments: [
-            { start: '2026-10-01', end: '2026-10-31', status: 'tentative', label: 'Oct' }
+            { eta: '2026-10-15', status: 'tentative', label: 'Oct' }
           ]
         }
       ]
@@ -759,10 +755,10 @@ const data = {
           name: '1 \u00b7 Help Centre',
           note: 'Phased rollout: pilot \u2192 Tier 1 \u2192 Academy \u2192 remaining tiers',
           segments: [
-            { start: '2026-07-01', end: '2026-07-31', status: 'shipped', label: '\u2713 pilot' },
-            { start: '2026-08-01', end: '2026-08-31', status: 'tentative', label: 'Tier 1' },
-            { start: '2026-09-01', end: '2026-09-30', status: 'tentative', label: 'Academy' },
-            { start: '2026-10-01', end: '2026-10-31', status: 'tentative', label: 'Tier 2/3/4' }
+            { eta: '2026-07-15', status: 'shipped', label: '\u2713 pilot' },
+            { eta: '2026-08-15', status: 'tentative', label: 'Tier 1' },
+            { eta: '2026-09-15', status: 'tentative', label: 'Academy' },
+            { eta: '2026-10-15', status: 'tentative', label: 'Tier 2/3/4' }
           ]
         },
         {
@@ -770,7 +766,7 @@ const data = {
           name: '2 \u00b7 WhatsApp notifications (Twilio)',
           note: 'WhatsApp notification templates via Twilio',
           segments: [
-            { start: '2026-09-01', end: '2026-09-30', status: 'tentative', label: 'Sep' }
+            { eta: '2026-09-15', status: 'tentative', label: 'Sep' }
           ]
         },
         {
@@ -778,7 +774,7 @@ const data = {
           name: '3 \u00b7 App store listings',
           note: 'App Store and Google Play listing translations',
           segments: [
-            { start: '2026-10-01', end: '2026-10-31', status: 'tentative', label: 'Oct' }
+            { eta: '2026-10-15', status: 'tentative', label: 'Oct' }
           ]
         },
         {
@@ -786,7 +782,7 @@ const data = {
           name: '4 \u00b7 Repo-integrated bundle',
           note: 'Integration with main product repository',
           segments: [
-            { start: '2026-11-01', end: '2026-11-30', status: 'tentative', label: 'Nov' }
+            { eta: '2026-11-15', status: 'tentative', label: 'Nov' }
           ]
         },
         {
@@ -794,13 +790,26 @@ const data = {
           name: '5 \u00b7 CRM content (HubSpot)',
           note: 'HubSpot CRM content localisation',
           segments: [
-            { start: '2026-12-01', end: '2026-12-31', status: 'tentative', label: 'Dec' }
+            { eta: '2026-12-15', status: 'tentative', label: 'Dec' }
           ]
         }
       ]
     }
   ]
 };
+
+// Load saved data or fall back to defaults
+let data;
+try {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  data = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(DEFAULT_DATA));
+} catch (e) {
+  data = JSON.parse(JSON.stringify(DEFAULT_DATA));
+}
+
+function saveData() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
+}
 
 /* ================================================================
    TIMELINE HELPERS
@@ -913,6 +922,7 @@ function renderTracks() {
     header.addEventListener('click', (e) => {
       if (e.target.closest('.track-add')) return;
       track.collapsed = !track.collapsed;
+      saveData();
       render();
     });
     trackEl.appendChild(header);
@@ -958,14 +968,11 @@ function renderTracks() {
       item.segments.forEach((seg, sIdx) => {
         if (!activeFilters.has(seg.status)) return;
 
-        const left = dateToPercent(seg.start);
-        const right = dateToPercent(seg.end);
-        const width = right - left;
+        const center = dateToPercent(seg.eta);
 
         const bar = document.createElement('div');
         bar.className = 'bar ' + seg.status;
-        bar.style.left = left + '%';
-        bar.style.width = Math.max(width, 3) + '%';
+        bar.style.left = center + '%';
 
         const label = document.createElement('span');
         label.className = 'bar-label';
@@ -1025,7 +1032,7 @@ function showTooltip(e, item, seg) {
   tooltip.innerHTML = `
     <div class="tt-title">${item.name}</div>
     <span class="tt-status ${seg.status}">${statusLabels[seg.status]}</span>
-    <div class="tt-dates">${seg.label} &middot; ${formatDate(seg.start)} \u2013 ${formatDate(seg.end)}</div>
+    <div class="tt-dates">ETA ${formatDate(seg.eta)}</div>
     ${item.note ? `<div class="tt-note">${item.note}</div>` : ''}
   `;
   tooltip.classList.add('visible');
@@ -1061,8 +1068,7 @@ function openModal(trackIdx, itemIdx, segIdx) {
   document.getElementById('edit-name').value = item.name;
   document.getElementById('edit-status').value = seg.status;
   document.getElementById('edit-label').value = seg.label;
-  document.getElementById('edit-start').value = seg.start;
-  document.getElementById('edit-end').value = seg.end;
+  document.getElementById('edit-eta').value = seg.eta;
   document.getElementById('edit-notes').value = item.note || '';
   document.getElementById('edit-delete').style.display = '';
 
@@ -1077,8 +1083,7 @@ function openAddModal(trackIdx) {
   document.getElementById('edit-name').value = '';
   document.getElementById('edit-status').value = 'tentative';
   document.getElementById('edit-label').value = '';
-  document.getElementById('edit-start').value = '';
-  document.getElementById('edit-end').value = '';
+  document.getElementById('edit-eta').value = '';
   document.getElementById('edit-notes').value = '';
   document.getElementById('edit-delete').style.display = 'none';
 
@@ -1099,10 +1104,9 @@ document.getElementById('edit-save').addEventListener('click', () => {
   if (!editContext) return;
   const { trackIdx } = editContext;
   const name = document.getElementById('edit-name').value.trim();
-  const start = document.getElementById('edit-start').value;
-  const end = document.getElementById('edit-end').value;
+  const eta = document.getElementById('edit-eta').value;
 
-  if (!name || !start || !end) return;
+  if (!name || !eta) return;
 
   if (editContext.isNew) {
     data.tracks[trackIdx].items.push({
@@ -1110,8 +1114,7 @@ document.getElementById('edit-save').addEventListener('click', () => {
       name: name,
       note: document.getElementById('edit-notes').value.trim(),
       segments: [{
-        start: start,
-        end: end,
+        eta: eta,
         status: document.getElementById('edit-status').value,
         label: document.getElementById('edit-label').value.trim() || name
       }]
@@ -1124,12 +1127,12 @@ document.getElementById('edit-save').addEventListener('click', () => {
     item.name = name;
     seg.status = document.getElementById('edit-status').value;
     seg.label = document.getElementById('edit-label').value.trim();
-    seg.start = start;
-    seg.end = end;
+    seg.eta = eta;
     item.note = document.getElementById('edit-notes').value.trim();
   }
 
   closeModal();
+  saveData();
   render();
 });
 
@@ -1144,6 +1147,7 @@ document.getElementById('edit-delete').addEventListener('click', () => {
   }
 
   closeModal();
+  saveData();
   render();
 });
 
