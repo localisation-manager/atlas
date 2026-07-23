@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fresha Locale Convention</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #ffffff;
+    --surface: #f9f9f9;
+    --ink: #0d1619;
+    --muted: #757676;
+    --hint: #969696;
+    --border: #e5e5e5;
+    --border-light: #f2f2f2;
+    --dark-1700: #0d1619;
+    --dark-text: rgba(255,255,255,0.85);
+    --dark-text-muted: rgba(255,255,255,0.55);
+    --accent: #6950f3;
+    --accent-hover: #5c4ace;
+    --accent-faded: #e7e8ff;
+    --accent-text: #403591;
+    --green: #1f8900;
+    --green-light: #d2f6c9;
+    --green-text: #165f00;
+    --amber: #f59e0b;
+    --amber-light: #fef3c7;
+    --amber-text: #92400e;
+    --red: #dc2626;
+    --red-light: #fef2f2;
+    --red-text: #991b1b;
+    --radius: 16px;
+    --radius-sm: 8px;
+    --shadow: 0 1px 3px rgba(13,22,25,0.08), 0 1px 2px rgba(13,22,25,0.04);
+  }
+
+  [data-theme="dark"] {
+    --bg: #22282a;
+    --surface: #191f21;
+    --ink: rgba(255,255,255,0.88);
+    --muted: rgba(255,255,255,0.55);
+    --hint: rgba(255,255,255,0.38);
+    --border: #3a4144;
+    --border-light: #2c3032;
+    --accent: #8880ff;
+    --accent-hover: #7b69ff;
+    --accent-faded: rgba(105,80,243,0.15);
+    --accent-text: #b0b1fd;
+    --green: #34d058;
+    --green-light: rgba(31,137,0,0.18);
+    --green-text: #6ee7b7;
+    --amber: #f59e0b;
+    --amber-light: rgba(245,158,11,0.15);
+    --amber-text: #fcd34d;
+    --red: #f87171;
+    --red-light: rgba(220,38,38,0.15);
+    --red-text: #fca5a5;
+    --shadow: 0 1px 3px rgba(0,0,0,0.3);
+  }
+
+  body {
+    font-family: 'Roobert', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--surface);
+    color: var(--ink);
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 9999px; }
+
+  /* ── Top bar ── */
+  .top-bar {
+    background: var(--dark-1700);
+    padding: 20px 28px 18px;
+    color: var(--dark-text);
+  }
+
+  .top-bar-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .top-bar .logo-mark {
+    width: 28px; height: 28px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 14px; color: #fff; flex-shrink: 0;
+  }
+
+  .top-bar h1 { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; }
+  .top-bar .subtitle { font-size: 13px; color: var(--dark-text-muted); margin-left: auto; }
+
+  .theme-toggle {
+    background: none; border: 1px solid rgba(255,255,255,0.15);
+    border-radius: var(--radius-sm); color: var(--dark-text-muted);
+    cursor: pointer; padding: 5px 7px; display: flex; align-items: center;
+    justify-content: center; transition: all 0.15s; margin-left: 12px; flex-shrink: 0;
+  }
+  .theme-toggle:hover { background: rgba(255,255,255,0.08); color: var(--dark-text); border-color: rgba(255,255,255,0.25); }
+  .theme-toggle svg { width: 16px; height: 16px; }
+
+  .container { max-width: 960px; margin: 0 auto; padding: 24px 28px 60px; }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--bg);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  .card-header {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .card-header h2 {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .card-header .count {
+    font-size: 11px;
+    color: var(--hint);
+    background: var(--surface);
+    padding: 1px 8px;
+    border-radius: 10px;
+    font-weight: 500;
+  }
+
+  /* ── Table ── */
+  .locale-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .locale-table th {
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--hint);
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+
+  .locale-table td {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border-light);
+    vertical-align: middle;
+  }
+
+  .locale-table tr:last-child td { border-bottom: none; }
+  .locale-table tr:hover td { background: var(--surface); }
+
+  .code { font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: 13px; font-weight: 600; }
+  .prefix-none { color: var(--hint); font-style: italic; }
+
+  .badge {
+    display: inline-block;
+    padding: 1px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .badge-default { background: var(--green-light); color: var(--green-text); }
+  .badge-variant { background: var(--accent-faded); color: var(--accent-text); }
+  .badge-rtl { background: var(--amber-light); color: var(--amber-text); }
+  .badge-ltr { background: var(--surface); color: var(--hint); border: 1px solid var(--border); }
+
+  .delete-btn {
+    background: none; border: none; color: var(--hint); cursor: pointer;
+    font-size: 16px; padding: 2px 6px; border-radius: 4px; transition: all 0.15s;
+    visibility: hidden;
+  }
+  .locale-table tr:hover .delete-btn { visibility: visible; }
+  .delete-btn:hover { color: var(--red); background: var(--red-light); }
+
+  /* ── Search ── */
+  .search-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: center;
+  }
+
+  .search-input {
+    flex: 1;
+    padding: 9px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--ink);
+    background: var(--bg);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .search-input:focus { border-color: var(--accent); }
+  .search-input::placeholder { color: var(--hint); }
+
+  .btn {
+    padding: 9px 18px; border-radius: var(--radius-sm); font-size: 13px;
+    font-weight: 600; cursor: pointer; border: none; transition: all 0.15s;
+    font-family: inherit; white-space: nowrap;
+  }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-ghost { background: none; color: var(--red); border: 1px solid var(--border); }
+  .btn-ghost:hover { background: var(--red-light); border-color: var(--red); }
+
+  /* ── Add locale form ── */
+  .add-form {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 20px;
+    display: none;
+  }
+
+  .add-form.visible { display: block; }
+
+  .add-form h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .form-field { display: flex; flex-direction: column; gap: 5px; }
+  .form-field.full { grid-column: 1 / -1; }
+
+  .form-field label {
+    font-size: 11px; font-weight: 700; color: var(--hint);
+    text-transform: uppercase; letter-spacing: 0.06em;
+  }
+
+  .form-field input, .form-field select {
+    padding: 9px 12px; border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm); font-size: 14px; font-family: inherit;
+    color: var(--ink); background: var(--bg); outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .form-field input:focus, .form-field select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(105,80,243,0.12);
+  }
+  .form-field input.error { border-color: var(--red); }
+  .form-field input[readonly] {
+    background: var(--surface); color: var(--muted); cursor: default;
+    font-family: 'SF Mono', Menlo, Consolas, monospace; font-weight: 600;
+  }
+  .form-field input[readonly]:focus { border-color: var(--border); box-shadow: none; }
+
+  .form-hint { font-size: 12px; color: var(--hint); }
+  .form-error { font-size: 12px; color: var(--red); font-weight: 500; }
+
+  /* ── Preview card ── */
+  .preview {
+    margin-top: 16px;
+    padding: 16px 20px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+  }
+
+  .preview h4 {
+    font-size: 12px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--hint); margin-bottom: 10px;
+  }
+
+  .preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 8px;
+  }
+
+  .preview-item {
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .preview-item .label { font-size: 11px; color: var(--hint); text-transform: uppercase; letter-spacing: 0.04em; }
+  .preview-item .value { font-size: 14px; font-weight: 600; }
+  .preview-item .value.code { font-family: 'SF Mono', Menlo, Consolas, monospace; }
+
+  .form-actions {
+    display: flex; gap: 8px; justify-content: flex-end;
+    margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border);
+  }
+
+  .btn-secondary { background: var(--bg); color: var(--ink); border: 1px solid var(--border); }
+  .btn-secondary:hover { background: var(--border-light); }
+
+  /* ── Convention reference ── */
+  .rules {
+    margin-top: 20px;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+    padding: 0 4px;
+  }
+  .rules summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 13px;
+  }
+  .rules ul { margin: 8px 0; padding-left: 20px; }
+  .rules li { margin: 4px 0; }
+  .rules code {
+    background: var(--accent-faded); color: var(--accent-text);
+    padding: 1px 5px; border-radius: 3px;
+    font: 12px 'SF Mono', Menlo, Consolas, monospace;
+  }
+</style>
+<script>
+  (function() {
+    var saved = localStorage.getItem('atlas-locales-theme');
+    var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', theme);
+  })();
+</script>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="top-bar-inner">
+    <div class="logo-mark">A</div>
+    <h1>Fresha Locale Convention</h1>
+    <span class="subtitle">Locale codes, prefixes &amp; validation</span>
+    <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">
+      <svg id="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+        <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </svg>
+      <svg id="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<div class="container">
+  <!-- Search + Add -->
+  <div class="search-bar">
+    <input class="search-input" type="text" id="search" placeholder="Search locales...">
+    <button class="btn btn-primary" id="add-btn">+ Add locale</button>
+  </div>
+
+  <!-- Add form -->
+  <div class="add-form" id="add-form">
+    <h3>Add new locale</h3>
+    <div class="form-grid">
+      <div class="form-field">
+        <label>Language</label>
+        <input type="text" id="f-name" placeholder="Start typing a language..." list="lang-list" autocomplete="off">
+        <datalist id="lang-list"></datalist>
+        <span class="form-hint" id="f-lang-hint"></span>
+      </div>
+      <div class="form-field">
+        <label>Resolved code</label>
+        <input type="text" id="f-lang-code" readonly tabindex="-1" placeholder="auto-filled">
+        <span class="form-hint">ISO 639-1 &mdash; filled automatically</span>
+      </div>
+      <div class="form-field">
+        <label id="f-sub-label">Country / Region</label>
+        <input type="text" id="f-sub" placeholder="Start typing a country..." list="region-list" autocomplete="off">
+        <datalist id="region-list"></datalist>
+        <span class="form-hint" id="f-sub-hint">Leave empty if no region applies (e.g. Arabic)</span>
+      </div>
+      <div class="form-field">
+        <label>Resolved subtag</label>
+        <input type="text" id="f-sub-code" readonly tabindex="-1" placeholder="auto-filled">
+        <span class="form-hint">ISO 3166-1 or ISO 15924 &mdash; filled automatically</span>
+      </div>
+      <div class="form-field">
+        <label>Use script subtag instead of region?</label>
+        <select id="f-subtag-type">
+          <option value="region">No &mdash; use country/region (most languages)</option>
+          <option value="script">Yes &mdash; use script (e.g. Latin, Cyrillic)</option>
+        </select>
+        <span class="form-hint">Use script for multi-script languages like Serbian (sr-Latn)</span>
+      </div>
+      <div class="form-field">
+        <label>Default for this language?</label>
+        <select id="f-default">
+          <option value="yes">Yes &mdash; primary locale</option>
+          <option value="no">No &mdash; regional variant</option>
+        </select>
+        <span class="form-hint" id="f-default-hint"></span>
+      </div>
+    </div>
+
+    <!-- Live preview -->
+    <div class="preview" id="preview" style="display:none">
+      <h4>Derived values</h4>
+      <div class="preview-grid">
+        <div class="preview-item">
+          <span class="label">Locale code</span>
+          <span class="value code" id="p-code">-</span>
+        </div>
+        <div class="preview-item">
+          <span class="label">Marketplace prefix</span>
+          <span class="value code" id="p-prefix">-</span>
+        </div>
+        <div class="preview-item">
+          <span class="label">Text direction</span>
+          <span class="value" id="p-dir">-</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn btn-secondary" id="form-cancel">Cancel</button>
+      <button class="btn btn-primary" id="form-save">Add locale</button>
+    </div>
+  </div>
+
+  <!-- Locale table -->
+  <div class="card">
+    <div class="card-header">
+      <h2>Locales</h2>
+      <span class="count" id="locale-count">0</span>
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="locale-table">
+        <thead>
+          <tr>
+            <th>Language</th>
+            <th>Locale code</th>
+            <th>Role</th>
+            <th>Marketplace prefix</th>
+            <th>Direction</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="locale-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Convention reference -->
+  <div class="rules">
+    <details>
+      <summary>Convention reference</summary>
+      <ul>
+        <li><strong>Locale code</strong> = <code>language-REGION</code>. Language lowercase (ISO 639-1), region UPPERCASE (ISO 3166-1), hyphen delimiter.</li>
+        <li><strong>Multi-script languages</strong> use a titlecase 4-letter ISO 15924 script subtag instead of region, e.g. <code>sr-Latn</code>.</li>
+        <li>Exactly <strong>one default locale per language</strong>.</li>
+        <li><strong>Marketplace prefix</strong> is derived: default locale &rarr; language subtag alone; non-default &rarr; full locale code. English default (US) &rarr; <code>None</code> (site root).</li>
+        <li>Always the <strong>modern code</strong>: <code>he</code> not <code>iw</code>, <code>id</code> not <code>in</code>. Language &ne; TLD: <code>cs</code> not <code>cz</code>, <code>el</code> not <code>gr</code>, <code>uk</code> not <code>ua</code>.</li>
+      </ul>
+    </details>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   LOCALE LOGIC
+   ================================================================ */
+const RTL = new Set(['ar','he','fa','ur','ps','ckb','dv','ug','yi','sd']);
+
+const DEPRECATED = {
+  iw:'he', 'in':'id', ji:'yi', mo:'ro', jw:'jv',
+  cz:'cs', gr:'el', ua:'uk', tl:'fil'
+};
+
+function normalise(code) {
+  code = code.replace(/_/g, '-');
+  var parts = code.split('-');
+  var lang = parts[0].toLowerCase();
+  var sub = parts[1] || '';
+  if (sub.length === 2) sub = sub.toUpperCase();
+  else if (sub.length === 4) sub = sub.charAt(0).toUpperCase() + sub.slice(1).toLowerCase();
+  return sub ? lang + '-' + sub : lang;
+}
+
+function expectedPrefix(code, isDefault) {
+  var lang = normalise(code).split('-')[0];
+  if (isDefault) return lang === 'en' ? 'None' : lang;
+  return normalise(code);
+}
+
+function direction(code) {
+  var lang = normalise(code).split('-')[0];
+  return RTL.has(lang) ? 'RTL' : 'LTR';
+}
+
+function checkDeprecated(langCode) {
+  var lc = langCode.toLowerCase();
+  if (DEPRECATED[lc]) return DEPRECATED[lc];
+  return null;
+}
+
+/* ================================================================
+   DATA
+   ================================================================ */
+const STORAGE_KEY = 'atlas-locale-convention';
+
+const DEFAULT_LOCALES = [
+  { name: 'Albanian (Albania)', code: 'sq-AL', isDefault: true },
+  { name: 'Arabic', code: 'ar', isDefault: true },
+  { name: 'Bulgarian (Bulgaria)', code: 'bg-BG', isDefault: true },
+  { name: 'Chinese (China)', code: 'zh-CN', isDefault: true },
+  { name: 'Chinese (Hong Kong)', code: 'zh-HK', isDefault: false },
+  { name: 'Croatian (Croatia)', code: 'hr-HR', isDefault: true },
+  { name: 'Czech (Czech Republic)', code: 'cs-CZ', isDefault: true },
+  { name: 'Danish (Denmark)', code: 'da-DK', isDefault: true },
+  { name: 'Dutch (Netherlands)', code: 'nl-NL', isDefault: true },
+  { name: 'English (United Kingdom)', code: 'en-GB', isDefault: false },
+  { name: 'English (United States)', code: 'en-US', isDefault: true },
+  { name: 'Estonian (Estonia)', code: 'et-EE', isDefault: true },
+  { name: 'Finnish (Finland)', code: 'fi-FI', isDefault: true },
+  { name: 'French (Canada)', code: 'fr-CA', isDefault: false },
+  { name: 'French (France)', code: 'fr-FR', isDefault: true },
+  { name: 'German (Germany)', code: 'de-DE', isDefault: true },
+  { name: 'Greek (Greece)', code: 'el-GR', isDefault: true },
+  { name: 'Hindi (India)', code: 'hi-IN', isDefault: true },
+  { name: 'Hungarian (Hungary)', code: 'hu-HU', isDefault: true },
+  { name: 'Indonesian (Indonesia)', code: 'id-ID', isDefault: true },
+  { name: 'Italian (Italy)', code: 'it-IT', isDefault: true },
+  { name: 'Japanese (Japan)', code: 'ja-JP', isDefault: true },
+  { name: 'Korean (South Korea)', code: 'ko-KR', isDefault: true },
+  { name: 'Lithuanian (Lithuania)', code: 'lt-LT', isDefault: true },
+  { name: 'Malay (Malaysia)', code: 'ms-MY', isDefault: true },
+  { name: 'Norwegian Bokmal (Norway)', code: 'nb-NO', isDefault: true },
+  { name: 'Polish (Poland)', code: 'pl-PL', isDefault: true },
+  { name: 'Portuguese (Brazil)', code: 'pt-BR', isDefault: true },
+  { name: 'Portuguese (Portugal)', code: 'pt-PT', isDefault: false },
+  { name: 'Romanian (Romania)', code: 'ro-RO', isDefault: true },
+  { name: 'Russian (Russia)', code: 'ru-RU', isDefault: true },
+  { name: 'Serbian (Serbia)', code: 'sr-Latn', isDefault: true },
+  { name: 'Slovenian (Slovenia)', code: 'sl-SI', isDefault: true },
+  { name: 'Spanish (Mexico)', code: 'es-MX', isDefault: false },
+  { name: 'Spanish (Spain)', code: 'es-ES', isDefault: true },
+  { name: 'Swedish (Sweden)', code: 'sv-SE', isDefault: true },
+  { name: 'Thai (Thailand)', code: 'th-TH', isDefault: true },
+  { name: 'Turkish (Turkey)', code: 'tr-TR', isDefault: true },
+  { name: 'Ukrainian (Ukraine)', code: 'uk-UA', isDefault: true },
+  { name: 'Vietnamese (Vietnam)', code: 'vi-VN', isDefault: true },
+];
+
+// Add derived fields
+DEFAULT_LOCALES.forEach(function(loc) {
+  loc.prefix = expectedPrefix(loc.code, loc.isDefault);
+  loc.dir = direction(loc.code);
+});
+
+let locales;
+try {
+  var saved = localStorage.getItem(STORAGE_KEY);
+  locales = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(DEFAULT_LOCALES));
+} catch (e) {
+  locales = JSON.parse(JSON.stringify(DEFAULT_LOCALES));
+}
+
+function saveData() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(locales)); } catch (e) {}
+}
+
+/* ================================================================
+   RENDER
+   ================================================================ */
+var searchTerm = '';
+
+function render() {
+  var body = document.getElementById('locale-body');
+  body.innerHTML = '';
+
+  var filtered = locales.filter(function(loc) {
+    if (!searchTerm) return true;
+    var q = searchTerm.toLowerCase();
+    return loc.name.toLowerCase().indexOf(q) !== -1 ||
+           loc.code.toLowerCase().indexOf(q) !== -1 ||
+           loc.prefix.toLowerCase().indexOf(q) !== -1;
+  });
+
+  // Sort: defaults first, then by name
+  filtered.sort(function(a, b) {
+    var langA = a.code.split('-')[0];
+    var langB = b.code.split('-')[0];
+    if (langA !== langB) return a.name.localeCompare(b.name);
+    if (a.isDefault !== b.isDefault) return a.isDefault ? -1 : 1;
+    return a.name.localeCompare(b.name);
+  });
+
+  document.getElementById('locale-count').textContent = filtered.length + ' of ' + locales.length;
+
+  filtered.forEach(function(loc) {
+    var tr = document.createElement('tr');
+
+    var prefixHtml = loc.prefix === 'None'
+      ? '<span class="prefix-none">None</span>'
+      : '<span class="code">' + esc(loc.prefix) + '</span>';
+
+    var roleBadge = loc.isDefault
+      ? '<span class="badge badge-default">Default</span>'
+      : '<span class="badge badge-variant">Variant</span>';
+
+    var dirBadge = loc.dir === 'RTL'
+      ? '<span class="badge badge-rtl">RTL</span>'
+      : '<span class="badge badge-ltr">LTR</span>';
+
+    // Check if this is a built-in locale
+    var isBuiltIn = DEFAULT_LOCALES.some(function(d) { return d.code === loc.code; });
+
+    tr.innerHTML =
+      '<td>' + esc(loc.name) + '</td>' +
+      '<td><span class="code">' + esc(loc.code) + '</span></td>' +
+      '<td>' + roleBadge + '</td>' +
+      '<td>' + prefixHtml + '</td>' +
+      '<td>' + dirBadge + '</td>' +
+      '<td>' + (isBuiltIn ? '' : '<button class="delete-btn" title="Remove">&times;</button>') + '</td>';
+
+    var deleteBtn = tr.querySelector('.delete-btn');
+    if (deleteBtn) {
+      deleteBtn.addEventListener('click', function() {
+        if (!confirm('Remove ' + loc.name + ' (' + loc.code + ')?')) return;
+        locales = locales.filter(function(l) { return l.code !== loc.code; });
+        saveData();
+        render();
+      });
+    }
+
+    body.appendChild(tr);
+  });
+}
+
+function esc(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* ================================================================
+   ISO LOOKUP TABLES
+   ================================================================ */
+// ISO 639-1 languages: [name, code]
+const LANGUAGES = [
+  ['Afrikaans','af'],['Albanian','sq'],['Amharic','am'],['Arabic','ar'],['Armenian','hy'],
+  ['Azerbaijani','az'],['Basque','eu'],['Belarusian','be'],['Bengali','bn'],['Bosnian','bs'],
+  ['Bulgarian','bg'],['Burmese','my'],['Catalan','ca'],['Cebuano','ceb'],['Chinese','zh'],
+  ['Croatian','hr'],['Czech','cs'],['Danish','da'],['Dutch','nl'],['English','en'],
+  ['Estonian','et'],['Filipino','fil'],['Finnish','fi'],['French','fr'],['Galician','gl'],
+  ['Georgian','ka'],['German','de'],['Greek','el'],['Gujarati','gu'],['Hausa','ha'],
+  ['Hebrew','he'],['Hindi','hi'],['Hungarian','hu'],['Icelandic','is'],['Indonesian','id'],
+  ['Irish','ga'],['Italian','it'],['Japanese','ja'],['Javanese','jv'],['Kannada','kn'],
+  ['Kazakh','kk'],['Khmer','km'],['Korean','ko'],['Kurdish (Central)','ckb'],['Kyrgyz','ky'],
+  ['Lao','lo'],['Latvian','lv'],['Lithuanian','lt'],['Macedonian','mk'],['Malay','ms'],
+  ['Malayalam','ml'],['Maltese','mt'],['Maori','mi'],['Marathi','mr'],['Mongolian','mn'],
+  ['Nepali','ne'],['Norwegian Bokmal','nb'],['Pashto','ps'],['Persian','fa'],['Polish','pl'],
+  ['Portuguese','pt'],['Punjabi','pa'],['Romanian','ro'],['Russian','ru'],['Serbian','sr'],
+  ['Sinhala','si'],['Slovak','sk'],['Slovenian','sl'],['Somali','so'],['Spanish','es'],
+  ['Swahili','sw'],['Swedish','sv'],['Tagalog','tl'],['Tamil','ta'],['Telugu','te'],
+  ['Thai','th'],['Turkish','tr'],['Ukrainian','uk'],['Urdu','ur'],['Uzbek','uz'],
+  ['Vietnamese','vi'],['Welsh','cy'],['Xhosa','xh'],['Yiddish','yi'],['Yoruba','yo'],['Zulu','zu'],
+];
+
+// ISO 3166-1 regions: [name, code]
+const REGIONS = [
+  ['Afghanistan','AF'],['Albania','AL'],['Algeria','DZ'],['Argentina','AR'],['Armenia','AM'],
+  ['Australia','AU'],['Austria','AT'],['Azerbaijan','AZ'],['Bahrain','BH'],['Bangladesh','BD'],
+  ['Belarus','BY'],['Belgium','BE'],['Bolivia','BO'],['Bosnia and Herzegovina','BA'],
+  ['Brazil','BR'],['Bulgaria','BG'],['Cambodia','KH'],['Canada','CA'],['Chile','CL'],
+  ['China','CN'],['Colombia','CO'],['Costa Rica','CR'],['Croatia','HR'],['Cuba','CU'],
+  ['Cyprus','CY'],['Czech Republic','CZ'],['Denmark','DK'],['Dominican Republic','DO'],
+  ['Ecuador','EC'],['Egypt','EG'],['El Salvador','SV'],['Estonia','EE'],['Ethiopia','ET'],
+  ['Finland','FI'],['France','FR'],['Georgia','GE'],['Germany','DE'],['Ghana','GH'],
+  ['Greece','GR'],['Guatemala','GT'],['Honduras','HN'],['Hong Kong','HK'],['Hungary','HU'],
+  ['Iceland','IS'],['India','IN'],['Indonesia','ID'],['Iran','IR'],['Iraq','IQ'],
+  ['Ireland','IE'],['Israel','IL'],['Italy','IT'],['Jamaica','JM'],['Japan','JP'],
+  ['Jordan','JO'],['Kazakhstan','KZ'],['Kenya','KE'],['Kuwait','KW'],['Kyrgyzstan','KG'],
+  ['Laos','LA'],['Latvia','LV'],['Lebanon','LB'],['Libya','LY'],['Lithuania','LT'],
+  ['Luxembourg','LU'],['Macao','MO'],['Malaysia','MY'],['Malta','MT'],['Mexico','MX'],
+  ['Moldova','MD'],['Mongolia','MN'],['Montenegro','ME'],['Morocco','MA'],['Myanmar','MM'],
+  ['Nepal','NP'],['Netherlands','NL'],['New Zealand','NZ'],['Nicaragua','NI'],['Nigeria','NG'],
+  ['North Macedonia','MK'],['Norway','NO'],['Oman','OM'],['Pakistan','PK'],['Panama','PA'],
+  ['Paraguay','PY'],['Peru','PE'],['Philippines','PH'],['Poland','PL'],['Portugal','PT'],
+  ['Puerto Rico','PR'],['Qatar','QA'],['Romania','RO'],['Russia','RU'],['Saudi Arabia','SA'],
+  ['Senegal','SN'],['Serbia','RS'],['Singapore','SG'],['Slovakia','SK'],['Slovenia','SI'],
+  ['Somalia','SO'],['South Africa','ZA'],['South Korea','KR'],['Spain','ES'],['Sri Lanka','LK'],
+  ['Sweden','SE'],['Switzerland','CH'],['Taiwan','TW'],['Tanzania','TZ'],['Thailand','TH'],
+  ['Tunisia','TN'],['Turkey','TR'],['Uganda','UG'],['Ukraine','UA'],['United Arab Emirates','AE'],
+  ['United Kingdom','GB'],['United States','US'],['Uruguay','UY'],['Uzbekistan','UZ'],
+  ['Venezuela','VE'],['Vietnam','VN'],['Yemen','YE'],
+];
+
+// ISO 15924 scripts: [name, code]
+const SCRIPTS = [
+  ['Arabic','Arab'],['Armenian','Armn'],['Bengali','Beng'],['Cyrillic','Cyrl'],
+  ['Devanagari','Deva'],['Georgian','Geor'],['Greek','Grek'],['Gujarati','Gujr'],
+  ['Gurmukhi','Guru'],['Han (Simplified)','Hans'],['Han (Traditional)','Hant'],
+  ['Hebrew','Hebr'],['Kannada','Knda'],['Latin','Latn'],['Malayalam','Mlym'],
+  ['Tamil','Taml'],['Telugu','Telu'],['Thai','Thai'],['Tibetan','Tibt'],
+];
+
+// Build lookup maps
+const LANG_BY_NAME = {};
+LANGUAGES.forEach(function(l) { LANG_BY_NAME[l[0].toLowerCase()] = l[1]; });
+
+const REGION_BY_NAME = {};
+REGIONS.forEach(function(r) { REGION_BY_NAME[r[0].toLowerCase()] = r[1]; });
+
+const SCRIPT_BY_NAME = {};
+SCRIPTS.forEach(function(s) { SCRIPT_BY_NAME[s[0].toLowerCase()] = s[1]; });
+
+/* ================================================================
+   POPULATE DATALISTS
+   ================================================================ */
+(function() {
+  var langList = document.getElementById('lang-list');
+  LANGUAGES.forEach(function(l) {
+    var opt = document.createElement('option');
+    opt.value = l[0];
+    opt.label = l[0] + ' (' + l[1] + ')';
+    langList.appendChild(opt);
+  });
+
+  function populateSubList() {
+    var regionList = document.getElementById('region-list');
+    regionList.innerHTML = '';
+    var type = document.getElementById('f-subtag-type').value;
+    var items = type === 'script' ? SCRIPTS : REGIONS;
+    items.forEach(function(r) {
+      var opt = document.createElement('option');
+      opt.value = r[0];
+      opt.label = r[0] + ' (' + r[1] + ')';
+      regionList.appendChild(opt);
+    });
+  }
+
+  populateSubList();
+  document.getElementById('f-subtag-type').addEventListener('change', function() {
+    document.getElementById('f-sub').value = '';
+    document.getElementById('f-sub-code').value = '';
+    var isScript = this.value === 'script';
+    document.getElementById('f-sub-label').textContent = isScript ? 'Script' : 'Country / Region';
+    document.getElementById('f-sub').placeholder = isScript ? 'Start typing a script...' : 'Start typing a country...';
+    document.getElementById('f-sub-hint').textContent = isScript
+      ? 'For multi-script languages like Serbian (Latn) or Chinese (Hans/Hant)'
+      : 'Leave empty if no region applies (e.g. Arabic)';
+    populateSubList();
+    updatePreview();
+  });
+})();
+
+/* ================================================================
+   ADD FORM
+   ================================================================ */
+var addForm = document.getElementById('add-form');
+var addBtn = document.getElementById('add-btn');
+
+addBtn.addEventListener('click', function() {
+  addForm.classList.toggle('visible');
+  if (addForm.classList.contains('visible')) {
+    document.getElementById('f-name').focus();
+  }
+});
+
+document.getElementById('form-cancel').addEventListener('click', function() {
+  addForm.classList.remove('visible');
+  clearForm();
+});
+
+// Auto-fill language code when a language is selected
+document.getElementById('f-name').addEventListener('input', function() {
+  var name = this.value.trim();
+  var code = LANG_BY_NAME[name.toLowerCase()] || '';
+  document.getElementById('f-lang-code').value = code;
+
+  var langHint = document.getElementById('f-lang-hint');
+  if (code) {
+    var replacement = checkDeprecated(code);
+    if (replacement) {
+      langHint.className = 'form-error';
+      langHint.textContent = '"' + code + '" is deprecated. Use "' + replacement + '" instead.';
+      this.classList.add('error');
+    } else {
+      langHint.className = 'form-hint';
+      langHint.textContent = '';
+      this.classList.remove('error');
+    }
+  } else {
+    langHint.className = 'form-hint';
+    langHint.textContent = name.length > 1 ? 'Type to search or pick from the list' : '';
+    this.classList.remove('error');
+  }
+  updatePreview();
+});
+
+// Auto-fill subtag when a region/script is selected
+document.getElementById('f-sub').addEventListener('input', function() {
+  var name = this.value.trim();
+  var type = document.getElementById('f-subtag-type').value;
+  var lookup = type === 'script' ? SCRIPT_BY_NAME : REGION_BY_NAME;
+  var code = lookup[name.toLowerCase()] || '';
+  document.getElementById('f-sub-code').value = code;
+  updatePreview();
+});
+
+// Update preview on default change
+document.getElementById('f-default').addEventListener('change', updatePreview);
+
+function updatePreview() {
+  var lang = document.getElementById('f-lang-code').value.trim();
+  var sub = document.getElementById('f-sub-code').value.trim();
+  var isDefault = document.getElementById('f-default').value === 'yes';
+  var preview = document.getElementById('preview');
+  var defaultHint = document.getElementById('f-default-hint');
+
+  // Check if default already exists for this language
+  if (isDefault && lang) {
+    var existingDefault = locales.find(function(l) {
+      return l.code.split('-')[0] === lang && l.isDefault;
+    });
+    if (existingDefault) {
+      defaultHint.className = 'form-error';
+      defaultHint.textContent = lang + ' already has a default: ' + existingDefault.code;
+    } else {
+      defaultHint.className = 'form-hint';
+      defaultHint.textContent = '';
+    }
+  } else {
+    defaultHint.className = 'form-hint';
+    defaultHint.textContent = '';
+  }
+
+  if (!lang) {
+    preview.style.display = 'none';
+    return;
+  }
+
+  var code = sub ? normalise(lang + '-' + sub) : lang;
+  var prefix = expectedPrefix(code, isDefault);
+  var dir = direction(code);
+
+  document.getElementById('p-code').textContent = code;
+  document.getElementById('p-prefix').textContent = prefix;
+  document.getElementById('p-dir').textContent = dir;
+  preview.style.display = '';
+}
+
+document.getElementById('form-save').addEventListener('click', function() {
+  var displayName = document.getElementById('f-name').value.trim();
+  var lang = document.getElementById('f-lang-code').value.trim();
+  var sub = document.getElementById('f-sub-code').value.trim();
+  var subName = document.getElementById('f-sub').value.trim();
+  var isDefault = document.getElementById('f-default').value === 'yes';
+
+  // Validate
+  if (!displayName || !lang) {
+    alert('Please select a language from the list.');
+    return;
+  }
+
+  if (checkDeprecated(lang)) {
+    alert('"' + lang + '" is a deprecated code. Use "' + checkDeprecated(lang) + '" instead.');
+    return;
+  }
+
+  var code = sub ? normalise(lang + '-' + sub) : lang;
+  var name = subName ? displayName + ' (' + subName + ')' : displayName;
+
+  // Check duplicate
+  if (locales.some(function(l) { return l.code === code; })) {
+    alert(code + ' already exists.');
+    return;
+  }
+
+  // Check default conflict
+  if (isDefault) {
+    var existingDefault = locales.find(function(l) {
+      return l.code.split('-')[0] === lang && l.isDefault;
+    });
+    if (existingDefault) {
+      alert(lang + ' already has a default locale (' + existingDefault.code + '). Set this as a variant or change the existing default first.');
+      return;
+    }
+  }
+
+  locales.push({
+    name: name,
+    code: code,
+    isDefault: isDefault,
+    prefix: expectedPrefix(code, isDefault),
+    dir: direction(code),
+  });
+
+  saveData();
+  render();
+  addForm.classList.remove('visible');
+  clearForm();
+});
+
+function clearForm() {
+  document.getElementById('f-name').value = '';
+  document.getElementById('f-lang-code').value = '';
+  document.getElementById('f-sub').value = '';
+  document.getElementById('f-sub-code').value = '';
+  document.getElementById('f-subtag-type').value = 'region';
+  document.getElementById('f-default').value = 'yes';
+  document.getElementById('f-lang-hint').textContent = '';
+  document.getElementById('f-default-hint').textContent = '';
+  document.getElementById('f-name').classList.remove('error');
+  document.getElementById('preview').style.display = 'none';
+  // Reset sub label/placeholder
+  document.getElementById('f-sub-label').textContent = 'Country / Region';
+  document.getElementById('f-sub').placeholder = 'Start typing a country...';
+  document.getElementById('f-sub-hint').textContent = 'Leave empty if no region applies (e.g. Arabic)';
+}
+
+/* ================================================================
+   SEARCH
+   ================================================================ */
+document.getElementById('search').addEventListener('input', function() {
+  searchTerm = this.value;
+  render();
+});
+
+/* ================================================================
+   THEME
+   ================================================================ */
+function getTheme() { return document.documentElement.getAttribute('data-theme') || 'light'; }
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('atlas-locales-theme', theme);
+  updateThemeIcon(theme);
+}
+
+function updateThemeIcon(theme) {
+  document.getElementById('icon-sun').style.display = theme === 'dark' ? 'block' : 'none';
+  document.getElementById('icon-moon').style.display = theme === 'dark' ? 'none' : 'block';
+}
+
+document.getElementById('theme-toggle').addEventListener('click', function() {
+  applyTheme(getTheme() === 'dark' ? 'light' : 'dark');
+});
+
+/* ================================================================
+   INIT
+   ================================================================ */
+updateThemeIcon(getTheme());
+render();
+</script>
+</body>
+</html>
