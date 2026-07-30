@@ -44,6 +44,11 @@
     --amber-light: #fef3c7;
     --amber-text: #92400e;
 
+    /* Blocked status — red */
+    --blocked: #dc2626;
+    --blocked-light: #fef2f2;
+    --blocked-text: #991b1b;
+
     /* Elton orange — today marker */
     --red: #e36f11;
 
@@ -82,6 +87,10 @@
     --amber: #f59e0b;
     --amber-light: rgba(245,158,11,0.15);
     --amber-text: #fcd34d;
+
+    --blocked: #f87171;
+    --blocked-light: rgba(220,38,38,0.15);
+    --blocked-text: #fca5a5;
 
     --red: #f59e0b;
 
@@ -438,6 +447,7 @@
   .bar.shipped  { background: var(--green-light); border: 1.5px solid var(--green); }
   .bar.dated    { background: var(--blue-light);  border: 1.5px solid var(--blue); }
   .bar.tentative { background: var(--amber-light); border: 1.5px dashed var(--amber); }
+  .bar.blocked  { background: var(--blocked-light); border: 1.5px solid var(--blocked); }
 
   .bar-label {
     font-size: 11px;
@@ -449,6 +459,7 @@
   .bar.shipped  .bar-label { color: var(--green-text); }
   .bar.dated    .bar-label { color: var(--blue-text); }
   .bar.tentative .bar-label { color: var(--amber-text); }
+  .bar.blocked  .bar-label { color: var(--blocked-text); }
 
   /* ── Today marker ── */
   .today-line {
@@ -507,7 +518,10 @@
   .tooltip .tt-status.shipped { background: rgba(31,137,0,0.25); color: #a5e89a; }
   .tooltip .tt-status.dated { background: rgba(105,80,243,0.25); color: #b0b1fd; }
   .tooltip .tt-status.tentative { background: rgba(245,158,11,0.2); color: #fcd34d; }
+  .tooltip .tt-status.blocked { background: rgba(220,38,38,0.25); color: #fca5a5; }
   .tooltip .tt-dates { color: #94a3b8; font-size: 11px; }
+  .tooltip .tt-blocker { color: #fca5a5; font-size: 11px; margin-top: 6px; padding-top: 6px; border-top: 1px solid #3a4144; }
+  .tooltip .tt-blocker strong { color: #f87171; }
   .tooltip .tt-note { color: #bfbfbf; font-style: italic; margin-top: 6px; padding-top: 6px; border-top: 1px solid #3a4144; font-size: 11px; }
 
   [data-theme="dark"] .tooltip { background: #0d1619; border: 1px solid #3a4144; }
@@ -704,6 +718,7 @@
       <div class="legend-item"><div class="legend-swatch" style="background:var(--green-light);border:1.5px solid var(--green);"></div>Shipped</div>
       <div class="legend-item"><div class="legend-swatch" style="background:var(--blue-light);border:1.5px solid var(--blue);"></div>Dated</div>
       <div class="legend-item"><div class="legend-swatch" style="background:var(--amber-light);border:1.5px dashed var(--amber);"></div>Tentative</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:var(--blocked-light);border:1.5px solid var(--blocked);"></div>Blocked</div>
     </div>
   </div>
 </div>
@@ -726,6 +741,7 @@
           <option value="shipped">Shipped</option>
           <option value="dated">Dated</option>
           <option value="tentative">Tentative</option>
+          <option value="blocked">Blocked</option>
         </select>
       </div>
       <div class="field">
@@ -740,6 +756,10 @@
     <div class="field">
       <label>Notes</label>
       <textarea id="edit-notes"></textarea>
+    </div>
+    <div class="field" id="blocker-field">
+      <label>Blocker</label>
+      <textarea id="edit-blocker" placeholder="What's blocking this item?"></textarea>
     </div>
     <div class="modal-actions">
       <button class="btn btn-ghost" id="edit-delete">Delete</button>
@@ -767,8 +787,9 @@ const DEFAULT_DATA = {
           id: 'sr-al',
           name: 'Serbian, Albanian',
           note: 'Scheduled for August 21 launch',
+          blocker: '2 bugs: days of the week, month names and duration labels render in Cyrillic script instead of Latin script',
           segments: [
-            { eta: '2026-08-21', status: 'dated', label: 'Aug 21' }
+            { eta: '2026-08-21', status: 'blocked', label: 'Aug 21' }
           ]
         },
         {
@@ -853,7 +874,17 @@ try {
 }
 
 function saveData() {
+  undoStack.push(localStorage.getItem(STORAGE_KEY) || JSON.stringify(DEFAULT_DATA));
+  if (undoStack.length > 50) undoStack.shift();
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
+}
+
+function undo() {
+  if (undoStack.length === 0) return;
+  var prev = undoStack.pop();
+  data = JSON.parse(prev);
+  try { localStorage.setItem(STORAGE_KEY, prev); } catch (e) {}
+  render();
 }
 
 /* ================================================================
@@ -889,8 +920,9 @@ function formatDate(dateStr) {
 /* ================================================================
    STATE
    ================================================================ */
-let activeFilters = new Set(['shipped', 'dated', 'tentative']);
+let activeFilters = new Set(['shipped', 'dated', 'tentative', 'blocked']);
 let editContext = null; // { trackIdx, itemIdx, segIdx }
+let undoStack = [];
 
 /* ================================================================
    RENDER
@@ -908,7 +940,8 @@ function renderFilters() {
   const types = [
     { key: 'shipped',   label: 'Shipped',   color: 'var(--green)' },
     { key: 'dated',     label: 'Dated',     color: 'var(--blue)' },
-    { key: 'tentative', label: 'Tentative', color: 'var(--amber)' }
+    { key: 'tentative', label: 'Tentative', color: 'var(--amber)' },
+    { key: 'blocked',   label: 'Blocked',   color: 'var(--blocked)' }
   ];
 
   types.forEach(t => {
@@ -1101,11 +1134,12 @@ function renderTodayHeader() {
 const tooltip = document.getElementById('tooltip');
 
 function showTooltip(e, item, seg) {
-  const statusLabels = { shipped: 'Shipped', dated: 'Dated', tentative: 'Tentative' };
+  const statusLabels = { shipped: 'Shipped', dated: 'Dated', tentative: 'Tentative', blocked: 'Blocked' };
   tooltip.innerHTML = `
     <div class="tt-title">${item.name}</div>
     <span class="tt-status ${seg.status}">${statusLabels[seg.status]}</span>
     <div class="tt-dates">ETA ${formatDate(seg.eta)}</div>
+    ${item.blocker ? `<div class="tt-blocker"><strong>Blocker:</strong> ${item.blocker}</div>` : ''}
     ${item.note ? `<div class="tt-note">${item.note}</div>` : ''}
   `;
   tooltip.classList.add('visible');
@@ -1143,6 +1177,7 @@ function openModal(trackIdx, itemIdx, segIdx) {
   document.getElementById('edit-label').value = seg.label;
   document.getElementById('edit-eta').value = seg.eta;
   document.getElementById('edit-notes').value = item.note || '';
+  document.getElementById('edit-blocker').value = item.blocker || '';
   document.getElementById('edit-delete').style.display = '';
 
   overlay.classList.add('visible');
@@ -1158,6 +1193,7 @@ function openAddModal(trackIdx) {
   document.getElementById('edit-label').value = '';
   document.getElementById('edit-eta').value = '';
   document.getElementById('edit-notes').value = '';
+  document.getElementById('edit-blocker').value = '';
   document.getElementById('edit-delete').style.display = 'none';
 
   overlay.classList.add('visible');
@@ -1169,9 +1205,22 @@ function closeModal() {
   editContext = null;
 }
 
+document.getElementById('edit-blocker').addEventListener('input', function() {
+  if (this.value.trim()) {
+    document.getElementById('edit-status').value = 'blocked';
+  } else if (document.getElementById('edit-status').value === 'blocked') {
+    document.getElementById('edit-status').value = 'dated';
+  }
+});
+
 document.getElementById('edit-cancel').addEventListener('click', closeModal);
 overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+  if (e.key === 'z' && (e.metaKey || e.ctrlKey) && !e.shiftKey) {
+    if (!overlay.classList.contains('visible')) { e.preventDefault(); undo(); }
+  }
+});
 
 document.getElementById('edit-save').addEventListener('click', () => {
   if (!editContext) return;
@@ -1186,6 +1235,7 @@ document.getElementById('edit-save').addEventListener('click', () => {
       id: 'item-' + Date.now(),
       name: name,
       note: document.getElementById('edit-notes').value.trim(),
+      blocker: document.getElementById('edit-blocker').value.trim(),
       segments: [{
         eta: eta,
         status: document.getElementById('edit-status').value,
@@ -1202,6 +1252,7 @@ document.getElementById('edit-save').addEventListener('click', () => {
     seg.label = document.getElementById('edit-label').value.trim();
     seg.eta = eta;
     item.note = document.getElementById('edit-notes').value.trim();
+    item.blocker = document.getElementById('edit-blocker').value.trim();
   }
 
   closeModal();
