@@ -502,65 +502,6 @@
     margin-top: 2px;
   }
 
-  /* ── Project groups ── */
-  .group-section { margin-bottom: 20px; }
-
-  .group-header {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--ink);
-    padding: 12px 20px 4px;
-  }
-
-  .group-desc {
-    font-size: 12px;
-    color: var(--hint);
-    font-style: italic;
-    padding: 0 20px 8px;
-  }
-
-  .group-list {
-    list-style: none;
-    padding: 0 20px 12px;
-  }
-
-  .group-list li {
-    font-size: 13px;
-    padding: 4px 0;
-    display: flex;
-    gap: 8px;
-  }
-
-  .group-list li::before {
-    content: '';
-    display: inline-block;
-    width: 6px; height: 6px;
-    background: var(--accent);
-    border-radius: 50%;
-    margin-top: 7px;
-    flex-shrink: 0;
-  }
-
-  .group-list .item-name { font-weight: 600; }
-  .group-list .item-desc { color: var(--muted); }
-
-  .group-divider {
-    border: none;
-    border-top: 1px solid var(--border-light);
-    margin: 0 20px;
-  }
-
-  /* ── Warning ── */
-  .warning {
-    background: var(--amber-light);
-    color: var(--amber-text);
-    border-radius: var(--radius-sm);
-    padding: 12px 16px;
-    font-size: 13px;
-    margin-bottom: 24px;
-    line-height: 1.6;
-  }
-
   .note {
     font-size: 13px;
     color: var(--muted);
@@ -568,16 +509,6 @@
     line-height: 1.7;
   }
 
-  /* ── Section headings ── */
-  .section-label {
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--hint);
-    margin-bottom: 12px;
-    padding: 0 2px;
-  }
 </style>
 <script>
   (function() {
@@ -644,20 +575,14 @@
     </div>
   </div>
 
-  <div class="warning">
-    <strong>Doesn't clearly match a row?</strong> If your content serves both B2B and B2C, try splitting it by audience first. When a clean split isn't possible, the fallback is to create a new project or work it out case-by-case &mdash; tag the L10N team.
-  </div>
-
-  <div class="note" style="margin-bottom: 32px;">
-    Reuse is safe across the split: related projects share translation memory and the glossary is global, so terminology stays consistent no matter how many projects there are.
+  <div class="note" style="margin-bottom: 16px;">
+    <strong>No match?</strong> Try splitting by audience first (B2B vs B2C). If that doesn't work, tag the L10N team &mdash; we'll create a new project or handle it case-by-case. Related projects share translation memory and the glossary is global, so terminology stays consistent across splits.
   </div>
 
   <!-- ── Decision flow ── -->
-  <div class="section-label">Not sure? Walk through it</div>
-
   <div class="flow-card">
     <div class="flow-header">
-      <h2>Find Your Project</h2>
+      <h2>Not sure? Walk through it</h2>
     </div>
     <div class="flow-body" id="flow-body">
       <button class="flow-back" id="flow-back">&larr; Back</button>
@@ -667,91 +592,6 @@
         <div class="flow-result-project" id="flow-result-project"></div>
         <div class="flow-result-note" id="flow-result-note"></div>
       </div>
-    </div>
-  </div>
-
-  <!-- ── Project groups ── -->
-  <div class="section-label">All projects by group</div>
-
-  <div class="card">
-    <div class="card-header">
-      <h2>Project Groups</h2>
-      <span class="count">7 groups</span>
-    </div>
-
-    <div class="group-section">
-      <div class="group-header">Product UI <span class="badge badge-b2b" style="margin-left:8px">B2B</span> <span class="badge badge-b2c">B2C</span></div>
-      <div class="group-desc">Codebase; space-constrained; auto-deploy behind flag</div>
-      <ul class="group-list">
-        <li><span><span class="item-name">Fresha Partner</span> <span class="item-desc">&mdash; Fresha Partner desktop + mobile <span class="badge badge-b2b">B2B</span></span></span></li>
-        <li><span><span class="item-name">Marketplace</span> <span class="item-desc">&mdash; web + native apps <span class="badge badge-b2c">B2C</span></span></span></li>
-        <li><span><span class="item-name">Deal Manager</span> <span class="item-desc">&mdash; BDM tool; separate for contractual / financial language <span class="badge badge-b2b">B2B</span></span></span></li>
-      </ul>
-    </div>
-
-    <hr class="group-divider">
-
-    <div class="group-section">
-      <div class="group-header">Customer Messaging <span class="badge badge-b2c" style="margin-left:8px">B2C</span></div>
-      <div class="group-desc">Shared TM</div>
-      <ul class="group-list">
-        <li><span><span class="item-name">Customer Emails</span> <span class="item-desc">&mdash; SendGrid; appointment confirmations etc.</span></span></li>
-        <li><span><span class="item-name">Customer SMS</span> <span class="item-desc">&mdash; GSM7 charset + length limits (strictest ruleset)</span></span></li>
-        <li><span><span class="item-name">WhatsApp Customer Notifications</span> <span class="item-desc">&mdash; Twilio; must follow Meta template rules</span></span></li>
-      </ul>
-    </div>
-
-    <hr class="group-divider">
-
-    <div class="group-section">
-      <div class="group-header">Partner Messaging <span class="badge badge-b2b" style="margin-left:8px">B2B</span></div>
-      <div class="group-desc">Shared TM</div>
-      <ul class="group-list">
-        <li><span><span class="item-name">Partner Emails</span> <span class="item-desc">&mdash; SendGrid; account verification, daily reporting</span></span></li>
-        <li><span><span class="item-name">Partner SMS</span></span></li>
-      </ul>
-    </div>
-
-    <hr class="group-divider">
-
-    <div class="group-section">
-      <div class="group-header">Marketing &amp; CRM <span class="badge badge-b2b" style="margin-left:8px">B2B</span> <span class="badge badge-b2c">B2C</span></div>
-      <div class="group-desc">Shared TM</div>
-      <ul class="group-list">
-        <li><span><span class="item-name">HubSpot Partner CRM</span> <span class="item-desc">&mdash; CRM / persuasive <span class="badge badge-b2b">B2B</span></span></span></li>
-        <li><span><span class="item-name">Business Landing Pages</span> <span class="item-desc">&mdash; B2B sell pages <span class="badge badge-b2b">B2B</span></span></span></li>
-        <li><span><span class="item-name">SEO Landing Pages</span> <span class="item-desc">&mdash; Landing Pages Manager <span class="badge badge-b2c">B2C</span></span></span></li>
-        <li><span><span class="item-name">Blog</span> <span class="item-desc">&mdash; Strapi <span class="badge badge-b2c">B2C</span></span></span></li>
-        <li><span><span class="item-name">Performance Marketing</span> <span class="item-desc">&mdash; ad-hoc keywords, social ads <span class="badge badge-b2c">B2C</span></span></span></li>
-      </ul>
-    </div>
-
-    <hr class="group-divider">
-
-    <div class="group-section">
-      <div class="group-header">Knowledge <span class="badge badge-b2b" style="margin-left:8px">B2B</span></div>
-      <ul class="group-list">
-        <li><span><span class="item-name">Help Center</span> <span class="item-desc">&mdash; Strapi articles + Mux SRT subtitles; draws on Fresha Partner TM so terminology stays aligned</span></span></li>
-      </ul>
-    </div>
-
-    <hr class="group-divider">
-
-    <div class="group-section">
-      <div class="group-header">Store &amp; Reference <span class="badge badge-both" style="margin-left:8px">Both</span></div>
-      <ul class="group-list">
-        <li><span><span class="item-name">App Store Listings</span> <span class="item-desc">&mdash; Marketplace + Fresha Partner</span></span></li>
-        <li><span><span class="item-name">Service Taxonomy</span> <span class="item-desc">&mdash; business &amp; treatment types DB + taxonomy suggestions; short controlled terms, translate-once</span></span></li>
-      </ul>
-    </div>
-
-    <hr class="group-divider">
-
-    <div class="group-section">
-      <div class="group-header">Internal <span class="badge badge-internal" style="margin-left:8px">Internal</span></div>
-      <ul class="group-list">
-        <li><span><span class="item-name">Commercial</span> <span class="item-desc">&mdash; ad-hoc internal (training, one-pagers)</span></span></li>
-      </ul>
     </div>
   </div>
 
