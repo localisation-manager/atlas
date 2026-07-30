@@ -28,6 +28,9 @@
     --amber: #f59e0b;
     --amber-light: #fef3c7;
     --amber-text: #92400e;
+    --blue: #2563eb;
+    --blue-light: #dbeafe;
+    --blue-text: #1e40af;
     --radius: 16px;
     --radius-sm: 8px;
     --shadow: 0 1px 3px rgba(13,22,25,0.08), 0 1px 2px rgba(13,22,25,0.04);
@@ -51,6 +54,9 @@
     --amber: #f59e0b;
     --amber-light: rgba(245,158,11,0.15);
     --amber-text: #fcd34d;
+    --blue: #60a5fa;
+    --blue-light: rgba(37,99,235,0.15);
+    --blue-text: #93c5fd;
     --shadow: 0 1px 3px rgba(0,0,0,0.3);
   }
 
@@ -114,6 +120,49 @@
     margin-bottom: 24px;
     line-height: 1.6;
   }
+
+  /* ── Tab navigation ── */
+  .tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 20px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .tab {
+    flex: 1;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    text-align: center;
+    cursor: pointer;
+    border: none;
+    background: var(--bg);
+    color: var(--muted);
+    transition: all 0.15s;
+    border-right: 1px solid var(--border);
+  }
+
+  .tab:last-child { border-right: none; }
+  .tab:hover { background: var(--surface); color: var(--ink); }
+
+  .tab.active {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .tab .tab-count {
+    font-size: 11px;
+    font-weight: 500;
+    opacity: 0.7;
+    margin-left: 4px;
+  }
+
+  .tab.active .tab-count { opacity: 0.85; }
 
   /* ── Cards ── */
   .card {
@@ -181,10 +230,35 @@
     color: var(--accent-text);
   }
 
-  /* ── Search ── */
-  .search-bar {
-    margin-bottom: 20px;
+  /* ── Badges ── */
+  .badge {
+    display: inline-block;
+    padding: 1px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
   }
+  .badge-b2b { background: var(--accent-faded); color: var(--accent-text); }
+  .badge-b2c { background: var(--green-light); color: var(--green-text); }
+  .badge-both { background: var(--amber-light); color: var(--amber-text); }
+  .badge-internal { background: var(--surface); color: var(--hint); border: 1px solid var(--border); }
+
+  /* ── Tags (shown on match) ── */
+  .match-tag {
+    display: inline-block;
+    padding: 0 6px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-family: 'SF Mono', Menlo, Consolas, monospace;
+    background: var(--amber-light);
+    color: var(--amber-text);
+    margin-left: 6px;
+  }
+
+  /* ── Search ── */
+  .search-bar { margin-bottom: 16px; }
 
   .search-input {
     width: 100%;
@@ -200,6 +274,233 @@
   }
   .search-input:focus { border-color: var(--accent); }
   .search-input::placeholder { color: var(--hint); }
+
+  .search-hint {
+    font-size: 12px;
+    color: var(--hint);
+    margin-top: 6px;
+    padding: 0 2px;
+  }
+
+  .search-hint code {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 0 4px;
+    border-radius: 3px;
+    font: 11px 'SF Mono', Menlo, Consolas, monospace;
+  }
+
+  /* ── No results ── */
+  .no-results {
+    padding: 32px 20px;
+    text-align: center;
+    color: var(--hint);
+    font-size: 14px;
+  }
+
+  .no-results strong { color: var(--ink); }
+
+  /* ── Decision flow ── */
+  .flow-card {
+    background: var(--bg);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    margin-bottom: 24px;
+    overflow: hidden;
+  }
+
+  .flow-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .flow-header h2 {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .flow-body { padding: 20px; }
+
+  .flow-question {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 14px;
+  }
+
+  .flow-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  @media (max-width: 600px) {
+    .flow-options { grid-template-columns: 1fr; }
+  }
+
+  .flow-btn {
+    padding: 14px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg);
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+
+  .flow-btn:hover { border-color: var(--accent); background: var(--accent-faded); }
+
+  .flow-btn .flow-btn-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+
+  .flow-btn .flow-btn-desc {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .flow-result {
+    padding: 14px 16px;
+    border-radius: var(--radius-sm);
+    background: var(--green-light);
+    margin-top: 14px;
+    display: none;
+  }
+
+  .flow-result .flow-result-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--green-text);
+    margin-bottom: 4px;
+  }
+
+  .flow-result .flow-result-project {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--green-text);
+  }
+
+  .flow-result .flow-result-note {
+    font-size: 12px;
+    color: var(--green-text);
+    margin-top: 4px;
+    opacity: 0.8;
+  }
+
+  .flow-back {
+    font-size: 13px;
+    color: var(--accent);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 600;
+    padding: 0;
+    margin-bottom: 12px;
+    display: none;
+  }
+
+  .flow-back:hover { text-decoration: underline; }
+
+  /* ── Runbook ── */
+  .runbook {
+    margin-bottom: 24px;
+  }
+
+  .runbook details {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  .runbook details + details { margin-top: 10px; }
+
+  .runbook summary {
+    padding: 14px 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .runbook summary::-webkit-details-marker { display: none; }
+
+  .runbook summary::before {
+    content: '\25B6';
+    font-size: 10px;
+    color: var(--hint);
+    transition: transform 0.15s;
+    flex-shrink: 0;
+  }
+
+  .runbook details[open] summary::before { transform: rotate(90deg); }
+
+  .runbook .runbook-body {
+    padding: 0 20px 20px;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .runbook .step-list {
+    list-style: none;
+    counter-reset: steps;
+  }
+
+  .runbook .step-list li {
+    counter-increment: steps;
+    padding: 8px 0 8px 32px;
+    position: relative;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .runbook .step-list li:last-child { border-bottom: none; }
+
+  .runbook .step-list li::before {
+    content: counter(steps);
+    position: absolute;
+    left: 0;
+    top: 9px;
+    width: 22px; height: 22px;
+    background: var(--accent-faded);
+    color: var(--accent-text);
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .runbook code {
+    background: var(--accent-faded);
+    color: var(--accent-text);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font: 12px 'SF Mono', Menlo, Consolas, monospace;
+  }
+
+  .runbook .step-note {
+    font-size: 12px;
+    color: var(--hint);
+    margin-top: 2px;
+  }
 
   /* ── Project groups ── */
   .group-section { margin-bottom: 20px; }
@@ -266,6 +567,17 @@
     padding: 0 4px;
     line-height: 1.7;
   }
+
+  /* ── Section headings ── */
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--hint);
+    margin-bottom: 12px;
+    padding: 0 2px;
+  }
 </style>
 <script>
   (function() {
@@ -295,20 +607,28 @@
 
 <div class="container">
 
-  <div class="callout">
-    Assignment is set <strong>once per file / import-batch</strong>, not per string. Use the lookup below &mdash; it keys off the two things an engineer already knows: where the content comes from and who it's for.
+  <!-- ── Audience filter ── -->
+  <div class="tabs" id="audience-tabs">
+    <button class="tab active" data-audience="all">All <span class="tab-count" id="count-all"></span></button>
+    <button class="tab" data-audience="b2b">B2B <span class="tab-count" id="count-b2b"></span></button>
+    <button class="tab" data-audience="b2c">B2C <span class="tab-count" id="count-b2c"></span></button>
+    <button class="tab" data-audience="both">Shared <span class="tab-count" id="count-both"></span></button>
+    <button class="tab" data-audience="internal">Internal <span class="tab-count" id="count-internal"></span></button>
   </div>
 
-  <!-- Search -->
+  <!-- ── Search ── -->
   <div class="search-bar">
-    <input class="search-input" type="text" id="search" placeholder="Search by content type or project name...">
+    <input class="search-input" type="text" id="search" placeholder="Search by content type, project, tool, or config key...">
+    <div class="search-hint">
+      Try: <code>sendgrid</code> <code>strapi</code> <code>crowdin.yml</code> <code>push notification</code> <code>new repo</code> <code>twilio</code>
+    </div>
   </div>
 
-  <!-- Lookup table -->
+  <!-- ── Lookup table ── -->
   <div class="card" id="lookup-card">
     <div class="card-header">
       <h2>Project Lookup</h2>
-      <span class="count" id="lookup-count">17</span>
+      <span class="count" id="lookup-count"></span>
     </div>
     <div style="overflow-x:auto;">
       <table class="lookup-table">
@@ -316,6 +636,7 @@
           <tr>
             <th>If you're adding&hellip;</th>
             <th>Project</th>
+            <th>Audience</th>
           </tr>
         </thead>
         <tbody id="lookup-body"></tbody>
@@ -324,14 +645,34 @@
   </div>
 
   <div class="warning">
-    <strong>Doesn't clearly match a row?</strong> New channel, new source system, or you're unsure of the audience &mdash; don't guess. Tag the L10N team; we'll place it and add a row here.
+    <strong>Doesn't clearly match a row?</strong> If your content serves both B2B and B2C, try splitting it by audience first. When a clean split isn't possible, the fallback is to create a new project or work it out case-by-case &mdash; tag the L10N team.
   </div>
 
-  <div class="note" style="margin-bottom: 24px;">
+  <div class="note" style="margin-bottom: 32px;">
     Reuse is safe across the split: related projects share translation memory and the glossary is global, so terminology stays consistent no matter how many projects there are.
   </div>
 
-  <!-- Project groups -->
+  <!-- ── Decision flow ── -->
+  <div class="section-label">Not sure? Walk through it</div>
+
+  <div class="flow-card">
+    <div class="flow-header">
+      <h2>Find Your Project</h2>
+    </div>
+    <div class="flow-body" id="flow-body">
+      <button class="flow-back" id="flow-back">&larr; Back</button>
+      <div id="flow-content"></div>
+      <div class="flow-result" id="flow-result">
+        <div class="flow-result-label">Your project</div>
+        <div class="flow-result-project" id="flow-result-project"></div>
+        <div class="flow-result-note" id="flow-result-note"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Project groups ── -->
+  <div class="section-label">All projects by group</div>
+
   <div class="card">
     <div class="card-header">
       <h2>Project Groups</h2>
@@ -339,19 +680,19 @@
     </div>
 
     <div class="group-section">
-      <div class="group-header">Product UI</div>
+      <div class="group-header">Product UI <span class="badge badge-b2b" style="margin-left:8px">B2B</span> <span class="badge badge-b2c">B2C</span></div>
       <div class="group-desc">Codebase; space-constrained; auto-deploy behind flag</div>
       <ul class="group-list">
-        <li><span><span class="item-name">Fresha Partner</span> <span class="item-desc">&mdash; Fresha Partner desktop + mobile</span></span></li>
-        <li><span><span class="item-name">Marketplace</span> <span class="item-desc">&mdash; web + native apps</span></span></li>
-        <li><span><span class="item-name">Deal Manager</span> <span class="item-desc">&mdash; BDM tool; separate for contractual / financial language</span></span></li>
+        <li><span><span class="item-name">Fresha Partner</span> <span class="item-desc">&mdash; Fresha Partner desktop + mobile <span class="badge badge-b2b">B2B</span></span></span></li>
+        <li><span><span class="item-name">Marketplace</span> <span class="item-desc">&mdash; web + native apps <span class="badge badge-b2c">B2C</span></span></span></li>
+        <li><span><span class="item-name">Deal Manager</span> <span class="item-desc">&mdash; BDM tool; separate for contractual / financial language <span class="badge badge-b2b">B2B</span></span></span></li>
       </ul>
     </div>
 
     <hr class="group-divider">
 
     <div class="group-section">
-      <div class="group-header">Customer Messaging</div>
+      <div class="group-header">Customer Messaging <span class="badge badge-b2c" style="margin-left:8px">B2C</span></div>
       <div class="group-desc">Shared TM</div>
       <ul class="group-list">
         <li><span><span class="item-name">Customer Emails</span> <span class="item-desc">&mdash; SendGrid; appointment confirmations etc.</span></span></li>
@@ -363,7 +704,7 @@
     <hr class="group-divider">
 
     <div class="group-section">
-      <div class="group-header">Partner Messaging</div>
+      <div class="group-header">Partner Messaging <span class="badge badge-b2b" style="margin-left:8px">B2B</span></div>
       <div class="group-desc">Shared TM</div>
       <ul class="group-list">
         <li><span><span class="item-name">Partner Emails</span> <span class="item-desc">&mdash; SendGrid; account verification, daily reporting</span></span></li>
@@ -374,21 +715,21 @@
     <hr class="group-divider">
 
     <div class="group-section">
-      <div class="group-header">Marketing &amp; CRM</div>
+      <div class="group-header">Marketing &amp; CRM <span class="badge badge-b2b" style="margin-left:8px">B2B</span> <span class="badge badge-b2c">B2C</span></div>
       <div class="group-desc">Shared TM</div>
       <ul class="group-list">
-        <li><span><span class="item-name">HubSpot Partner CRM</span> <span class="item-desc">&mdash; CRM / persuasive</span></span></li>
-        <li><span><span class="item-name">Business Landing Pages</span> <span class="item-desc">&mdash; B2B sell pages</span></span></li>
-        <li><span><span class="item-name">SEO Landing Pages</span> <span class="item-desc">&mdash; Landing Pages Manager</span></span></li>
-        <li><span><span class="item-name">Blog</span> <span class="item-desc">&mdash; Strapi</span></span></li>
-        <li><span><span class="item-name">Performance Marketing</span> <span class="item-desc">&mdash; ad-hoc keywords, social ads</span></span></li>
+        <li><span><span class="item-name">HubSpot Partner CRM</span> <span class="item-desc">&mdash; CRM / persuasive <span class="badge badge-b2b">B2B</span></span></span></li>
+        <li><span><span class="item-name">Business Landing Pages</span> <span class="item-desc">&mdash; B2B sell pages <span class="badge badge-b2b">B2B</span></span></span></li>
+        <li><span><span class="item-name">SEO Landing Pages</span> <span class="item-desc">&mdash; Landing Pages Manager <span class="badge badge-b2c">B2C</span></span></span></li>
+        <li><span><span class="item-name">Blog</span> <span class="item-desc">&mdash; Strapi <span class="badge badge-b2c">B2C</span></span></span></li>
+        <li><span><span class="item-name">Performance Marketing</span> <span class="item-desc">&mdash; ad-hoc keywords, social ads <span class="badge badge-b2c">B2C</span></span></span></li>
       </ul>
     </div>
 
     <hr class="group-divider">
 
     <div class="group-section">
-      <div class="group-header">Knowledge</div>
+      <div class="group-header">Knowledge <span class="badge badge-b2b" style="margin-left:8px">B2B</span></div>
       <ul class="group-list">
         <li><span><span class="item-name">Help Center</span> <span class="item-desc">&mdash; Strapi articles + Mux SRT subtitles; draws on Fresha Partner TM so terminology stays aligned</span></span></li>
       </ul>
@@ -397,7 +738,7 @@
     <hr class="group-divider">
 
     <div class="group-section">
-      <div class="group-header">Store &amp; Reference</div>
+      <div class="group-header">Store &amp; Reference <span class="badge badge-both" style="margin-left:8px">Both</span></div>
       <ul class="group-list">
         <li><span><span class="item-name">App Store Listings</span> <span class="item-desc">&mdash; Marketplace + Fresha Partner</span></span></li>
         <li><span><span class="item-name">Service Taxonomy</span> <span class="item-desc">&mdash; business &amp; treatment types DB + taxonomy suggestions; short controlled terms, translate-once</span></span></li>
@@ -407,7 +748,7 @@
     <hr class="group-divider">
 
     <div class="group-section">
-      <div class="group-header">Internal</div>
+      <div class="group-header">Internal <span class="badge badge-internal" style="margin-left:8px">Internal</span></div>
       <ul class="group-list">
         <li><span><span class="item-name">Commercial</span> <span class="item-desc">&mdash; ad-hoc internal (training, one-pagers)</span></span></li>
       </ul>
@@ -418,27 +759,153 @@
 
 <script>
 /* ================================================================
-   LOOKUP DATA
+   LOOKUP DATA — each entry has multiple content descriptions,
+   audience tag, and searchable tags (tool names, config keys, etc.)
    ================================================================ */
 var LOOKUP = [
-  { content: 'UI strings from the Fresha Partner app repo', project: 'Fresha Partner' },
-  { content: 'UI strings from the Marketplace repo (web / native)', project: 'Marketplace' },
-  { content: 'UI strings from the Deal Manager app repo', project: 'Deal Manager' },
-  { content: 'A SendGrid email \u2014 to customers', project: 'Customer Emails' },
-  { content: 'A SendGrid email \u2014 to partners', project: 'Partner Emails' },
-  { content: 'An SMS template \u2014 to customers', project: 'Customer SMS' },
-  { content: 'An SMS template \u2014 to partners', project: 'Partner SMS' },
-  { content: 'A WhatsApp template (Twilio)', project: 'WhatsApp Customer Notifications' },
-  { content: 'A HubSpot email / CRM content', project: 'HubSpot Partner CRM' },
-  { content: 'A Strapi help article or Mux video subtitle', project: 'Help Center' },
-  { content: 'A Strapi blog post', project: 'Blog' },
-  { content: 'A B2B sell / product landing page', project: 'Business Landing Pages' },
-  { content: 'An SEO page from Landing Pages Manager', project: 'SEO Landing Pages' },
-  { content: 'An App Store Connect / Google Play listing', project: 'App Store Listings' },
-  { content: 'Business types / treatment types data', project: 'Service Taxonomy' },
-  { content: 'Ad-hoc keywords / social ads (performance marketing)', project: 'Performance Marketing' },
-  { content: 'Ad-hoc internal material (training, one-pagers)', project: 'Commercial' },
+  {
+    content: 'UI strings from the Fresha Partner app repo',
+    alts: ['Partner desktop app strings', 'Partner mobile app strings', 'B2B app UI copy', 'In-app copy for partners', 'Partner dashboard text'],
+    project: 'Fresha Partner',
+    audience: 'b2b',
+    tags: ['fresha-partner', 'partner app', 'partner desktop', 'partner mobile', 'react', 'i18n', 'b2b UI'],
+  },
+  {
+    content: 'UI strings from the Marketplace repo (web / native)',
+    alts: ['Consumer-facing app strings', 'Booking app UI copy', 'Marketplace web strings', 'Marketplace native app strings'],
+    project: 'Marketplace',
+    audience: 'b2c',
+    tags: ['marketplace', 'consumer app', 'booking', 'web app', 'native app', 'b2c UI', 'react native'],
+  },
+  {
+    content: 'UI strings from the Deal Manager app repo',
+    alts: ['BDM tool strings', 'Sales tool copy', 'Contract / financial UI text'],
+    project: 'Deal Manager',
+    audience: 'b2b',
+    tags: ['deal manager', 'bdm', 'sales tool', 'contracts', 'b2b'],
+  },
+  {
+    content: 'A SendGrid email to customers',
+    alts: ['Transactional email to customers', 'Appointment confirmation email', 'Booking confirmation email', 'Customer notification email', 'Customer receipt email'],
+    project: 'Customer Emails',
+    audience: 'b2c',
+    tags: ['sendgrid', 'transactional email', 'appointment confirmation', 'booking confirmation', 'customer notification', 'email template'],
+  },
+  {
+    content: 'A SendGrid email to partners',
+    alts: ['Transactional email to partners', 'Partner notification email', 'Account verification email', 'Daily report email'],
+    project: 'Partner Emails',
+    audience: 'b2b',
+    tags: ['sendgrid', 'partner notification', 'account verification', 'daily report', 'email template'],
+  },
+  {
+    content: 'An SMS template to customers',
+    alts: ['Customer text message', 'Appointment reminder SMS', 'Booking SMS notification'],
+    project: 'Customer SMS',
+    audience: 'b2c',
+    tags: ['sms', 'text message', 'gsm7', 'customer notification', 'appointment reminder'],
+  },
+  {
+    content: 'An SMS template to partners',
+    alts: ['Partner text message', 'Partner SMS notification'],
+    project: 'Partner SMS',
+    audience: 'b2b',
+    tags: ['sms', 'text message', 'partner notification'],
+  },
+  {
+    content: 'A WhatsApp template (Twilio)',
+    alts: ['WhatsApp message to customers', 'WhatsApp notification', 'WhatsApp booking message'],
+    project: 'WhatsApp Customer Notifications',
+    audience: 'b2c',
+    tags: ['whatsapp', 'twilio', 'meta template', 'customer notification', 'messaging'],
+  },
+  {
+    content: 'A HubSpot email / CRM content',
+    alts: ['HubSpot marketing email', 'CRM communication', 'Partner marketing email', 'HubSpot workflow email'],
+    project: 'HubSpot Partner CRM',
+    audience: 'b2b',
+    tags: ['hubspot', 'crm', 'marketing email', 'partner crm', 'lifecycle email'],
+  },
+  {
+    content: 'A Strapi help article or Mux video subtitle',
+    alts: ['Help center article', 'Knowledge base article', 'Support article', 'Academy video subtitle', 'SRT subtitle file', 'Help documentation'],
+    project: 'Help Center',
+    audience: 'b2b',
+    tags: ['strapi', 'help article', 'mux', 'srt', 'subtitle', 'video', 'academy', 'knowledge base', 'support docs'],
+  },
+  {
+    content: 'A Strapi blog post',
+    alts: ['Blog article', 'Content marketing post', 'SEO blog content'],
+    project: 'Blog',
+    audience: 'b2c',
+    tags: ['strapi', 'blog', 'content marketing', 'article'],
+  },
+  {
+    content: 'A B2B sell / product landing page',
+    alts: ['Business landing page', 'Partner acquisition page', 'Product page', 'Fresha for business page'],
+    project: 'Business Landing Pages',
+    audience: 'b2b',
+    tags: ['landing page', 'b2b', 'sell page', 'product page', 'acquisition'],
+  },
+  {
+    content: 'An SEO page from Landing Pages Manager',
+    alts: ['SEO landing page', 'City page', 'Category page', 'Service-in-city page'],
+    project: 'SEO Landing Pages',
+    audience: 'b2c',
+    tags: ['landing page', 'seo', 'landing pages manager', 'city page', 'category page'],
+  },
+  {
+    content: 'An App Store Connect / Google Play listing',
+    alts: ['App store description', 'Google Play listing', 'App Store metadata', 'App screenshot text', 'ASO content'],
+    project: 'App Store Listings',
+    audience: 'both',
+    tags: ['app store', 'google play', 'app store connect', 'aso', 'app listing', 'app description'],
+  },
+  {
+    content: 'Business types / treatment types data',
+    alts: ['Service taxonomy', 'Category names', 'Treatment categories', 'Business categories', 'Taxonomy suggestions'],
+    project: 'Service Taxonomy',
+    audience: 'both',
+    tags: ['taxonomy', 'business types', 'treatment types', 'categories', 'service types', 'database'],
+  },
+  {
+    content: 'Ad-hoc keywords / social ads (performance marketing)',
+    alts: ['Google Ads copy', 'Facebook ads copy', 'Ad keywords', 'Social media ad text', 'PPC copy'],
+    project: 'Performance Marketing',
+    audience: 'b2c',
+    tags: ['ads', 'keywords', 'social ads', 'google ads', 'facebook ads', 'ppc', 'performance'],
+  },
+  {
+    content: 'Ad-hoc internal material (training, one-pagers)',
+    alts: ['Internal training content', 'Sales one-pager', 'Internal documentation', 'Onboarding material'],
+    project: 'Commercial',
+    audience: 'internal',
+    tags: ['training', 'one-pager', 'internal', 'sales material', 'onboarding'],
+  },
+  {
+    content: 'Push notification to customers',
+    alts: ['Mobile push notification', 'In-app notification', 'Customer push alert'],
+    project: 'Marketplace',
+    audience: 'b2c',
+    tags: ['push notification', 'mobile notification', 'in-app notification', 'customer alert'],
+  },
+  {
+    content: 'Push notification to partners',
+    alts: ['Partner push notification', 'Partner mobile alert'],
+    project: 'Fresha Partner',
+    audience: 'b2b',
+    tags: ['push notification', 'mobile notification', 'partner alert'],
+  },
+  {
+    content: 'A new repo that needs localisation',
+    alts: ['New project setup', 'New repository i18n', 'Setting up translations for a new repo'],
+    project: 'Ask L10N team',
+    audience: 'both',
+    tags: ['new repo', 'new project', 'setup', 'crowdin.yml', 'project_id', 'crowdin', 'octo-sts', 'workflow_call', 'GH_FRESHAENGINEERING_CROWDIN_TOKEN'],
+  },
 ];
+
+var activeAudience = 'all';
 
 /* ================================================================
    RENDER
@@ -447,33 +914,219 @@ function esc(str) {
   return String(str).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
+function audienceBadge(aud) {
+  var labels = { b2b: 'B2B', b2c: 'B2C', both: 'Both', internal: 'Internal' };
+  return '<span class="badge badge-' + aud + '">' + labels[aud] + '</span>';
+}
+
 function render(filter) {
   var body = document.getElementById('lookup-body');
   body.innerHTML = '';
-  var q = (filter || '').toLowerCase();
+  var q = (filter || '').toLowerCase().trim();
 
   var filtered = LOOKUP.filter(function(row) {
+    // Audience filter
+    if (activeAudience !== 'all' && row.audience !== activeAudience) return false;
     if (!q) return true;
-    return row.content.toLowerCase().indexOf(q) !== -1 ||
-           row.project.toLowerCase().indexOf(q) !== -1;
+
+    // Search across content, alts, project, and tags
+    var haystack = [row.content, row.project].concat(row.alts || []).concat(row.tags || []).join(' ').toLowerCase();
+    // Match all words in the query
+    var words = q.split(/\s+/);
+    return words.every(function(w) { return haystack.indexOf(w) !== -1; });
   });
 
   document.getElementById('lookup-count').textContent = filtered.length + ' of ' + LOOKUP.length;
 
+  if (filtered.length === 0) {
+    var noRow = document.createElement('tr');
+    noRow.innerHTML = '<td colspan="3"><div class="no-results"><strong>No matches.</strong><br>Try different keywords, or tag the L10N team if you\'re unsure.</div></td>';
+    body.appendChild(noRow);
+    return;
+  }
+
   filtered.forEach(function(row) {
     var tr = document.createElement('tr');
+
+    // Find which tag matched (if searching) to show it
+    var matchedTag = '';
+    if (q) {
+      var words = q.split(/\s+/);
+      (row.tags || []).forEach(function(tag) {
+        if (!matchedTag && words.some(function(w) { return tag.toLowerCase().indexOf(w) !== -1; })) {
+          // Only show tag if it wasn't already visible in the content text
+          if (row.content.toLowerCase().indexOf(tag.toLowerCase()) === -1) {
+            matchedTag = tag;
+          }
+        }
+      });
+    }
+
+    var contentHtml = esc(row.content);
+    if (matchedTag) {
+      contentHtml += ' <span class="match-tag">' + esc(matchedTag) + '</span>';
+    }
+
     tr.innerHTML =
-      '<td>' + esc(row.content) + '</td>' +
-      '<td><span class="project-name">' + esc(row.project) + '</span></td>';
+      '<td>' + contentHtml + '</td>' +
+      '<td><span class="project-name">' + esc(row.project) + '</span></td>' +
+      '<td>' + audienceBadge(row.audience) + '</td>';
     body.appendChild(tr);
   });
 }
+
+/* ================================================================
+   TAB COUNTS
+   ================================================================ */
+function updateCounts() {
+  var counts = { all: LOOKUP.length, b2b: 0, b2c: 0, both: 0, internal: 0 };
+  LOOKUP.forEach(function(r) { counts[r.audience] = (counts[r.audience] || 0) + 1; });
+  document.getElementById('count-all').textContent = counts.all;
+  document.getElementById('count-b2b').textContent = counts.b2b;
+  document.getElementById('count-b2c').textContent = counts.b2c;
+  document.getElementById('count-both').textContent = counts.both;
+  document.getElementById('count-internal').textContent = counts.internal;
+}
+
+/* ================================================================
+   AUDIENCE TABS
+   ================================================================ */
+document.getElementById('audience-tabs').addEventListener('click', function(e) {
+  var btn = e.target.closest('.tab');
+  if (!btn) return;
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+  btn.classList.add('active');
+  activeAudience = btn.getAttribute('data-audience');
+  render(document.getElementById('search').value);
+});
 
 /* ================================================================
    SEARCH
    ================================================================ */
 document.getElementById('search').addEventListener('input', function() {
   render(this.value);
+});
+
+/* ================================================================
+   DECISION FLOW
+   ================================================================ */
+var FLOW = {
+  start: {
+    question: 'Who is the content for?',
+    options: [
+      { label: 'Partners (B2B)', desc: 'Salon/spa owners, partner-facing tools', next: 'b2b' },
+      { label: 'Customers (B2C)', desc: 'End consumers booking appointments', next: 'b2c' },
+      { label: 'Both / Shared', desc: 'Used by both partners and customers', next: 'shared' },
+      { label: 'Internal', desc: 'Training, sales material, internal tools, not user-facing', next: 'internal' },
+    ]
+  },
+  b2b: {
+    question: 'What type of B2B content?',
+    options: [
+      { label: 'App UI strings', desc: 'In the Fresha Partner or Deal Manager codebase', next: 'b2b_ui' },
+      { label: 'Email', desc: 'SendGrid transactional email to partners', result: 'Partner Emails' },
+      { label: 'SMS', desc: 'Text message to partners', result: 'Partner SMS' },
+      { label: 'Help / Knowledge', desc: 'Help center article or video subtitle', result: 'Help Center', note: 'Strapi articles + Mux SRT subtitles.' },
+      { label: 'Landing page', desc: 'B2B sell / product page', result: 'Business Landing Pages' },
+      { label: 'CRM / HubSpot', desc: 'Marketing email or CRM content', result: 'HubSpot Partner CRM' },
+    ]
+  },
+  b2b_ui: {
+    question: 'Which B2B app?',
+    options: [
+      { label: 'Fresha Partner', desc: 'Desktop + mobile partner app', result: 'Fresha Partner' },
+      { label: 'Deal Manager', desc: 'BDM / sales tool', result: 'Deal Manager', note: 'Separate project for contractual / financial language.' },
+    ]
+  },
+  b2c: {
+    question: 'What type of B2C content?',
+    options: [
+      { label: 'App UI strings', desc: 'Marketplace web or native app', result: 'Marketplace' },
+      { label: 'Email', desc: 'SendGrid email to customers', result: 'Customer Emails' },
+      { label: 'SMS', desc: 'Text message to customers', result: 'Customer SMS' },
+      { label: 'WhatsApp', desc: 'WhatsApp message via Twilio', result: 'WhatsApp Customer Notifications', note: 'Must follow Meta template rules.' },
+      { label: 'Push notification', desc: 'Mobile push to customers', result: 'Marketplace', note: 'Push notifications live in the Marketplace project.' },
+      { label: 'Landing page (SEO)', desc: 'City/category pages from Landing Pages Manager', result: 'SEO Landing Pages' },
+      { label: 'Blog', desc: 'Strapi blog post', result: 'Blog' },
+      { label: 'Ads / Keywords', desc: 'Google Ads, social ads, PPC', result: 'Performance Marketing' },
+    ]
+  },
+  shared: {
+    question: 'What kind of shared content?',
+    options: [
+      { label: 'App Store listing', desc: 'App Store Connect or Google Play', result: 'App Store Listings', note: 'Covers both Marketplace and Fresha Partner listings.' },
+      { label: 'Service / business types', desc: 'Taxonomy data, treatment categories', result: 'Service Taxonomy', note: 'Short controlled terms, translate-once.' },
+      { label: 'Can be split by audience', desc: 'Some strings are B2B, some are B2C', next: 'shared_split' },
+      { label: 'Can\'t be split', desc: 'Platform code, shared library, genuinely dual-audience', result: 'Ask L10N team', note: 'We\'ll either create a dedicated project or handle case-by-case. Don\'t guess \u2014 tag the L10N team.' },
+    ]
+  },
+  internal: {
+    question: 'What kind of internal content?',
+    options: [
+      { label: 'Training / one-pagers / sales material', desc: 'Ad-hoc documents, onboarding content', result: 'Commercial', note: 'Ad-hoc internal content goes here.' },
+      { label: 'Internal tool UI', desc: 'E.g. an internal admin panel or ops dashboard', result: 'Ask L10N team', note: 'Internal tools may need their own project. The Deal Manager project only covers partner-facing BDM content \u2014 other internal tools aren\'t covered yet. Tag the L10N team.' },
+    ]
+  },
+  shared_split: {
+    question: 'Splitting is the preferred first step. Which side has more of the content?',
+    options: [
+      { label: 'Mostly partner-facing (B2B)', desc: 'Put B2B strings in the partner project, split out the B2C portion separately', next: 'b2b' },
+      { label: 'Mostly customer-facing (B2C)', desc: 'Put B2C strings in the marketplace project, split out the B2B portion separately', next: 'b2c' },
+      { label: 'Roughly equal / unclear', desc: 'Not obvious how to split', result: 'Ask L10N team', note: 'We\'ll help decide whether to split, create a new project, or handle case-by-case.' },
+    ]
+  },
+};
+
+var flowHistory = [];
+
+function renderFlow(stepId) {
+  var step = FLOW[stepId];
+  var content = document.getElementById('flow-content');
+  var result = document.getElementById('flow-result');
+  var back = document.getElementById('flow-back');
+
+  result.style.display = 'none';
+  back.style.display = flowHistory.length > 0 ? 'block' : 'none';
+
+  var html = '<div class="flow-question">' + esc(step.question) + '</div>';
+  html += '<div class="flow-options">';
+  step.options.forEach(function(opt, i) {
+    html += '<button class="flow-btn" data-index="' + i + '">' +
+            '<div class="flow-btn-title">' + esc(opt.label) + '</div>' +
+            '<div class="flow-btn-desc">' + esc(opt.desc) + '</div>' +
+            '</button>';
+  });
+  html += '</div>';
+  content.innerHTML = html;
+
+  content.querySelectorAll('.flow-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var opt = step.options[parseInt(this.getAttribute('data-index'))];
+      if (opt.result) {
+        // Show result
+        document.getElementById('flow-result-project').textContent = opt.result;
+        document.getElementById('flow-result-note').textContent = opt.note || '';
+        result.style.display = 'block';
+        content.querySelectorAll('.flow-btn').forEach(function(b) {
+          b.style.opacity = '0.4';
+          b.style.pointerEvents = 'none';
+        });
+        this.style.opacity = '1';
+        this.style.borderColor = 'var(--green)';
+        this.style.background = 'var(--green-light)';
+      } else if (opt.next) {
+        flowHistory.push(stepId);
+        renderFlow(opt.next);
+      }
+    });
+  });
+}
+
+document.getElementById('flow-back').addEventListener('click', function() {
+  if (flowHistory.length > 0) {
+    var prev = flowHistory.pop();
+    renderFlow(prev);
+  }
 });
 
 /* ================================================================
@@ -500,7 +1153,9 @@ document.getElementById('theme-toggle').addEventListener('click', function() {
    INIT
    ================================================================ */
 updateThemeIcon(getTheme());
+updateCounts();
 render();
+renderFlow('start');
 </script>
 </body>
 </html>
