@@ -652,6 +652,32 @@
     flex-shrink: 0;
   }
 
+  /* ── Data actions (export / reset) ── */
+  .data-actions {
+    display: inline-flex;
+    gap: 6px;
+    margin-left: 8px;
+  }
+
+  .data-btn {
+    background: none;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: var(--radius-sm);
+    color: var(--dark-text-muted);
+    cursor: pointer;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+
+  .data-btn:hover {
+    background: rgba(255,255,255,0.08);
+    color: var(--dark-text);
+    border-color: rgba(255,255,255,0.25);
+  }
+
   /* ── Footer ── */
   .footer-note {
     margin-top: 16px;
@@ -687,6 +713,10 @@
     <div class="logo-mark">A</div>
     <h1>Atlas &mdash; Rollout &amp; Migration Roadmap</h1>
     <span class="subtitle">H2 2026</span>
+    <span class="data-actions">
+      <button class="data-btn" id="export-btn" title="Download data as JSON">Export</button>
+      <button class="data-btn" id="reset-btn" title="Clear local edits and reload published data">Reset</button>
+    </span>
     <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">
       <svg id="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
         <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
@@ -864,14 +894,8 @@ const DEFAULT_DATA = {
   ]
 };
 
-// Load saved data or fall back to defaults
-let data;
-try {
-  const saved = localStorage.getItem(STORAGE_KEY);
-  data = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(DEFAULT_DATA));
-} catch (e) {
-  data = JSON.parse(JSON.stringify(DEFAULT_DATA));
-}
+// Data is loaded async — see INIT section at the bottom
+let data = JSON.parse(JSON.stringify(DEFAULT_DATA));
 
 function saveData() {
   undoStack.push(localStorage.getItem(STORAGE_KEY) || JSON.stringify(DEFAULT_DATA));
@@ -1298,10 +1322,46 @@ document.getElementById('theme-toggle').addEventListener('click', () => {
 });
 
 /* ================================================================
+   EXPORT / RESET
+   ================================================================ */
+document.getElementById('export-btn').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'roadmap.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+
+document.getElementById('reset-btn').addEventListener('click', () => {
+  if (!confirm('Clear local edits and reload published data?')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
+});
+
+/* ================================================================
    INIT
    ================================================================ */
 updateThemeIcon(getTheme());
-render();
+
+(async function() {
+  // 1. If localStorage has draft edits, use those
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      data = JSON.parse(saved);
+      render();
+      return;
+    }
+  } catch (e) {}
+  // 2. Otherwise fetch the published JSON
+  try {
+    const res = await fetch('data/roadmap.json');
+    if (res.ok) data = await res.json();
+  } catch (e) {}
+  // 3. Falls back to DEFAULT_DATA (already set)
+  render();
+})();
 </script>
 </body>
 </html>

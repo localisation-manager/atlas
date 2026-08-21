@@ -1,0 +1,88 @@
+{
+  "tracks": [
+    {
+      "id": "locale-rollout",
+      "name": "Locale rollout",
+      "color": "blue",
+      "collapsed": false,
+      "items": [
+        {
+          "id": "sr-al",
+          "name": "Serbian, Albanian",
+          "note": "Scheduled for August 21 launch",
+          "blocker": "2 bugs: days of the week, month names and duration labels render in Cyrillic script instead of Latin script",
+          "segments": [
+            { "eta": "2026-08-21", "status": "blocked", "label": "Aug 21" }
+          ]
+        },
+        {
+          "id": "cs-uk",
+          "name": "Czech, Ukrainian",
+          "note": "Scheduled for September 18 launch",
+          "segments": [
+            { "eta": "2026-09-18", "status": "dated", "label": "Sep 18" }
+          ]
+        },
+        {
+          "id": "hi-he",
+          "name": "Hindi, Hebrew*",
+          "note": "Hindi included in approved budget; Hebrew recently requested by GM \u2014 ETA Q3/Q4",
+          "segments": [
+            { "eta": "2026-10-15", "status": "tentative", "label": "Oct" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "atlas-migration",
+      "name": "Atlas migration",
+      "color": "amber",
+      "collapsed": false,
+      "items": [
+        {
+          "id": "help-centre",
+          "name": "1 \u00b7 Help Centre",
+          "note": "Phased rollout: pilot \u2192 Tier 1 \u2192 Academy \u2192 remaining tiers",
+          "segments": [
+            { "eta": "2026-07-15", "status": "shipped", "label": "\u2713 pilot" },
+            { "eta": "2026-08-15", "status": "tentative", "label": "Tier 1" },
+            { "eta": "2026-09-15", "status": "tentative", "label": "Academy" },
+            { "eta": "2026-10-15", "status": "tentative", "label": "Tier 2/3/4" }
+          ]
+        },
+        {
+          "id": "whatsapp",
+          "name": "2 \u00b7 WhatsApp notifications (Twilio)",
+          "note": "WhatsApp notification templates via Twilio",
+          "segments": [
+            { "eta": "2026-09-15", "status": "tentative", "label": "Sep" }
+          ]
+        },
+        {
+          "id": "app-store",
+          "name": "3 \u00b7 App store listings",
+          "note": "App Store and Google Play listing translations",
+          "segments": [
+            { "eta": "2026-10-15", "status": "tentative", "label": "Oct" }
+          ]
+        },
+        {
+          "id": "repo-bundle",
+          "name": "4 \u00b7 Repo-integrated bundle",
+          "note": "Integration with main product repository",
+          "segments": [
+            { "eta": "2026-11-15", "status": "tentative", "label": "Nov" }
+          ]
+        },
+        {
+          "id": "crm-hubspot",
+          "name": "5 \u00b7 CRM content (HubSpot)",
+          "note": "HubSpot CRM content localisation",
+          "segments": [
+            { "eta": "2026-12-15", "status": "tentative", "label": "Dec" }
+          ]
+        }
+      ]
+    }
+  ]
+}

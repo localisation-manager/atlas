@@ -107,6 +107,15 @@
   .theme-toggle:hover { background: rgba(255,255,255,0.08); color: var(--dark-text); border-color: rgba(255,255,255,0.25); }
   .theme-toggle svg { width: 16px; height: 16px; }
 
+  .data-actions { display: inline-flex; gap: 6px; margin-left: 8px; }
+  .data-btn {
+    background: none; border: 1px solid rgba(255,255,255,0.15);
+    border-radius: var(--radius-sm); color: var(--dark-text-muted);
+    cursor: pointer; padding: 4px 10px; font-size: 11px; font-weight: 600;
+    font-family: inherit; transition: all 0.15s;
+  }
+  .data-btn:hover { background: rgba(255,255,255,0.08); color: var(--dark-text); border-color: rgba(255,255,255,0.25); }
+
   .container { max-width: 960px; margin: 0 auto; padding: 24px 28px 60px; }
 
   /* ── Cards ── */
@@ -350,6 +359,10 @@
     <div class="logo-mark">A</div>
     <h1>Fresha Locale Convention</h1>
     <span class="subtitle">Locale codes, prefixes &amp; validation</span>
+    <span class="data-actions">
+      <button class="data-btn" id="export-btn" title="Download data as JSON">Export</button>
+      <button class="data-btn" id="reset-btn" title="Clear local edits and reload published data">Reset</button>
+    </span>
     <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">
       <svg id="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
         <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
@@ -567,13 +580,8 @@ DEFAULT_LOCALES.forEach(function(loc) {
   loc.dir = direction(loc.code);
 });
 
-let locales;
-try {
-  var saved = localStorage.getItem(STORAGE_KEY);
-  locales = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(DEFAULT_LOCALES));
-} catch (e) {
-  locales = JSON.parse(JSON.stringify(DEFAULT_LOCALES));
-}
+// Data is loaded async — see INIT section at the bottom
+let locales = JSON.parse(JSON.stringify(DEFAULT_LOCALES));
 
 function saveData() {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(locales)); } catch (e) {}
@@ -964,10 +972,58 @@ document.getElementById('theme-toggle').addEventListener('click', function() {
 });
 
 /* ================================================================
+   EXPORT / RESET
+   ================================================================ */
+document.getElementById('export-btn').addEventListener('click', function() {
+  // Export only the base fields (name, code, isDefault) — derived fields are recomputed on load
+  var clean = locales.map(function(l) {
+    return { name: l.name, code: l.code, isDefault: l.isDefault };
+  });
+  var blob = new Blob([JSON.stringify(clean, null, 2)], { type: 'application/json' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'locales.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+
+document.getElementById('reset-btn').addEventListener('click', function() {
+  if (!confirm('Clear local edits and reload published data?')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
+});
+
+/* ================================================================
    INIT
    ================================================================ */
 updateThemeIcon(getTheme());
-render();
+
+function enrichLocales(arr) {
+  arr.forEach(function(loc) {
+    loc.prefix = expectedPrefix(loc.code, loc.isDefault);
+    loc.dir = direction(loc.code);
+  });
+  return arr;
+}
+
+(async function() {
+  // 1. If localStorage has draft edits, use those
+  try {
+    var saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      locales = JSON.parse(saved);
+      render();
+      return;
+    }
+  } catch (e) {}
+  // 2. Otherwise fetch the published JSON
+  try {
+    var res = await fetch('../data/locales.json');
+    if (res.ok) locales = enrichLocales(await res.json());
+  } catch (e) {}
+  // 3. Falls back to DEFAULT_LOCALES (already set with derived fields)
+  render();
+})();
 </script>
 </body>
 </html>
