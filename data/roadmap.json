@@ -72,9 +72,9 @@
               "label": "Academy"
             },
             {
-              "eta": "2026-09-15",
+              "eta": "2026-09-16",
               "status": "tentative",
-              "label": "Tier 2/3/4"
+              "label": "ALL"
             }
           ],
           "blocker": ""
@@ -85,11 +85,12 @@
           "note": "WhatsApp notification templates via Twilio",
           "segments": [
             {
-              "eta": "2026-09-15",
+              "eta": "2026-10-05",
               "status": "tentative",
-              "label": "Sep"
+              "label": "Oct"
             }
-          ]
+          ],
+          "blocker": ""
         },
         {
           "id": "repo-bundle",
@@ -97,7 +98,7 @@
           "note": "Fresha Partner, Marketplace, Partner and customer notifications, emails, SMS, business landing pages, app store listings\nSee new project structure: https://localisation-manager.github.io/atlas/projects/",
           "segments": [
             {
-              "eta": "2026-10-07",
+              "eta": "2026-10-26",
               "status": "tentative",
               "label": "Oct"
             }
