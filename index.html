@@ -1356,7 +1356,7 @@ updateThemeIcon(getTheme());
   } catch (e) {}
   // 2. Otherwise fetch the published JSON
   try {
-    const res = await fetch('data/roadmap.json');
+    const res = await fetch('data/roadmap.json?v=' + Date.now());
     if (res.ok) data = await res.json();
   } catch (e) {}
   // 3. Falls back to DEFAULT_DATA (already set)
@@ -1365,3 +1365,4 @@ updateThemeIcon(getTheme());
 </script>
 </body>
 </html>
+
