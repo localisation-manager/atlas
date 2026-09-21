@@ -67,7 +67,7 @@
               "label": "Tier 1"
             },
             {
-              "eta": "2026-10-24",
+              "eta": "2026-12-01",
               "status": "tentative",
               "label": "Academy"
             },
@@ -82,15 +82,15 @@
         {
           "id": "whatsapp",
           "name": "2 · WhatsApp notifications (Twilio)",
-          "note": "WhatsApp notification templates via Twilio",
+          "note": "",
           "segments": [
             {
-              "eta": "2026-10-05",
-              "status": "tentative",
-              "label": "Oct"
+              "eta": "2026-11-16",
+              "status": "blocked",
+              "label": "Nov"
             }
           ],
-          "blocker": ""
+          "blocker": "Blocked by Dealers migrating their Twilio integration to github"
         },
         {
           "id": "repo-bundle",
@@ -108,14 +108,15 @@
         {
           "id": "crm-hubspot",
           "name": "4 · CRM content (HubSpot)",
-          "note": "HubSpot emails, modals, in-apps, push notifications",
+          "note": "HubSpot emails, modals, in-apps, push notifications. Shipping at the same time as Growth's initiative: Revamp in-product comms (feature announcements+)",
           "segments": [
             {
-              "eta": "2026-11-06",
-              "status": "tentative",
-              "label": "Nov"
+              "eta": "2026-10-26",
+              "status": "dated",
+              "label": "Oct"
             }
-          ]
+          ],
+          "blocker": ""
         }
       ]
     },
@@ -128,14 +129,15 @@
         {
           "id": "item-1784799046355",
           "name": "AI concierge LPs",
-          "note": "",
+          "note": "Shipping along Growth's roadmap item: Revamp in-product comms (feature announcements+)",
           "segments": [
             {
-              "eta": "2026-11-06",
-              "status": "tentative",
-              "label": "Nov"
+              "eta": "2026-10-12",
+              "status": "dated",
+              "label": "Oct"
             }
-          ]
+          ],
+          "blocker": ""
         }
       ]
     }
