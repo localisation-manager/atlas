@@ -78,6 +78,32 @@
             }
           ],
           "blocker": ""
+        }
+        {
+          "id": "repo-bundle",
+          "name": "2 · Repo-integrated bundle",
+          "note": "Fresha Partner, Marketplace, Partner and customer notifications, emails, SMS, business landing pages, app store listings\nSee new project structure: https://localisation-manager.github.io/atlas/projects/",
+          "segments": [
+            {
+              "eta": "2026-10-26",
+              "status": "tentative",
+              "label": "Oct"
+            }
+          ],
+          "blocker": ""
+        },
+        {
+          "id": "in-product-comms",
+          "name": "3 · In-product comms",
+          "note": "Content migration for Growth's 'Revamp in-product comms' initiative — announcement modals, news drawer, push.",
+          "segments": [
+            {
+              "eta": "2026-10-26",
+              "status": "tentative",
+              "label": "Oct"
+            }
+          ],
+          "blocker": ""
         },
         {
           "id": "whatsapp",
@@ -91,32 +117,6 @@
             }
           ],
           "blocker": "Blocked by Dealers migrating their Twilio integration to github"
-        },
-        {
-          "id": "repo-bundle",
-          "name": "3 · Repo-integrated bundle",
-          "note": "Fresha Partner, Marketplace, Partner and customer notifications, emails, SMS, business landing pages, app store listings\nSee new project structure: https://localisation-manager.github.io/atlas/projects/",
-          "segments": [
-            {
-              "eta": "2026-10-26",
-              "status": "tentative",
-              "label": "Oct"
-            }
-          ],
-          "blocker": ""
-        },
-        {
-          "id": "in-product-comms",
-          "name": "4 · In-product comms",
-          "note": "Content migration for Growth's 'Revamp in-product comms' initiative — announcement modals, news drawer, push.",
-          "segments": [
-            {
-              "eta": "2026-10-26",
-              "status": "tentative",
-              "label": "Oct"
-            }
-          ],
-          "blocker": ""
         },
         {
           "id": "hubspot-emails",
