@@ -106,27 +106,27 @@
           "blocker": ""
         },
         {
+          "id": "in-product-comms",
+          "name": "4 · In-product comms (Growth revamp)",
+          "note": "Content migration for Growth's 'Revamp in-product comms' initiative — announcement modals, news drawer, push. Audience/timing move to HubSpot workflows; new internal platform 'Comms' owns content, localisation, arbitration & delivery. 37 locales + en-GB fallback. Early stage — HubSpot data readiness, no translation workflow yet, and internal tooling adoption are open risks. See track-1784798992721/in-product-images for the image side of this.",
+          "segments": [
+            {
+              "eta": "2026-10-26",
+              "status": "tentative",
+              "label": "Oct"
+            }
+          ],
+          "blocker": ""
+        },
+        {
           "id": "hubspot-emails",
-          "name": "4 · HubSpot emails",
+          "name": "5 · HubSpot emails",
           "note": "HubSpot marketing email content only. Separate from the in-product comms revamp and from image i18n — Emma continues to handle HubSpot images manually for now.",
           "segments": [
             {
               "eta": "2026-11-26",
               "status": "dated",
               "label": "Nov"
-            }
-          ],
-          "blocker": ""
-        },
-        {
-          "id": "in-product-comms",
-          "name": "5 · In-product comms (Growth revamp)",
-          "note": "Content migration for Growth's 'Revamp in-product comms' initiative — announcement modals, news drawer, push. Audience/timing move to HubSpot workflows; new internal platform 'Comms' owns content, localisation, arbitration & delivery. 37 locales + en-GB fallback. Early stage — HubSpot data readiness, no translation workflow yet, and internal tooling adoption are open risks. See track-1784798992721/in-product-images for the image side of this.",
-          "segments": [
-            {
-              "eta": "2026-10-31",
-              "status": "tentative",
-              "label": "Oct"
             }
           ],
           "blocker": ""
