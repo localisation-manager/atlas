@@ -129,7 +129,7 @@
               "label": "Q4"
             }
           ],
-          "blocker": "Blocked until HubSpot's audience-variants beta is out"
+          "blocker": "Blocked until HubSpot's audience-variants beta is out. Raised by Dylan, no public API docs yet."
         }
       ]
     },
