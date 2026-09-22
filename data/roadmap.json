@@ -121,7 +121,7 @@
         {
           "id": "hubspot-emails",
           "name": "5 · HubSpot emails",
-          "note": "HubSpot marketing email content only. Separate from the in-product comms revamp and from image i18n — Emma continues to handle HubSpot images manually for now.",
+          "note": "HubSpot marketing email content only.",
           "segments": [
             {
               "eta": "2026-11-26",
