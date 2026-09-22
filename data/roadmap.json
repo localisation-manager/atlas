@@ -125,11 +125,11 @@
           "segments": [
             {
               "eta": "2026-11-26",
-              "status": "dated",
+              "status": "blocked",
               "label": "Q4"
             }
           ],
-          "blocker": ""
+          "blocker": "Blocked until HubSpot's audience-variants beta is out"
         }
       ]
     },
