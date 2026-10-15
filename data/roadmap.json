@@ -93,12 +93,12 @@
           "blocker": ""
         },
         {
-          "id": "in-product-comms",
-          "name": "3 · In-product comms",
-          "note": "Content migration for Growth's 'Revamp in-product comms' initiative — announcement modals, news drawer, push.",
+          "id": "legal",
+          "name": "3 · Legal content",
+          "note": "",
           "segments": [
             {
-              "eta": "2026-10-26",
+              "eta": "2026-10-16",
               "status": "tentative",
               "label": "Oct"
             }
@@ -107,7 +107,7 @@
         },
         {
           "id": "whatsapp",
-          "name": "2 · WhatsApp notifications (Twilio)",
+          "name": "4 · WhatsApp notifications (Twilio)",
           "note": "",
           "segments": [
             {
