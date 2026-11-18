@@ -7,41 +7,17 @@
       "collapsed": false,
       "items": [
         {
-          "id": "sr-al",
-          "name": "Serbian, Albanian",
-          "note": "via Crowdin",
-          "segments": [
-            {
-              "eta": "2026-08-07",
-              "status": "shipped",
-              "label": "Aug 7"
-            }
-          ],
-          "blocker": "Days/months/duration labels in Cyrillic script instead of Latin script"
-        },
-        {
-          "id": "cs-uk",
-          "name": "Czech, Ukrainian",
-          "note": "via Crowdin",
-          "segments": [
-            {
-              "eta": "2026-09-07",
-              "status": "dated",
-              "label": "Sep 7"
-            }
-          ]
-        },
-        {
           "id": "hi-he",
           "name": "Hebrew",
           "note": "First locale launched via Atlas",
           "segments": [
             {
-              "eta": "2026-10-07",
+              "eta": "2026-12-28",
               "status": "tentative",
               "label": "Q4"
             }
-          ]
+          ],
+          "blocker": ""
         }
       ]
     },
@@ -63,17 +39,17 @@
             },
             {
               "eta": "2026-08-26",
-              "status": "tentative",
+              "status": "shipped",
               "label": "Tier 1"
             },
             {
-              "eta": "2026-12-01",
+              "eta": "2027-01-25",
               "status": "tentative",
               "label": "Academy"
             },
             {
               "eta": "2026-09-16",
-              "status": "tentative",
+              "status": "shipped",
               "label": "ALL"
             }
           ],
@@ -85,22 +61,9 @@
           "note": "Fresha Partner, Marketplace, Partner and customer notifications, emails, SMS, business landing pages, app store listings\nSee new project structure: https://localisation-manager.github.io/atlas/projects/",
           "segments": [
             {
-              "eta": "2026-10-26",
-              "status": "tentative",
-              "label": "Oct"
-            }
-          ],
-          "blocker": ""
-        },
-        {
-          "id": "legal",
-          "name": "3 · Legal content",
-          "note": "",
-          "segments": [
-            {
-              "eta": "2026-10-16",
-              "status": "tentative",
-              "label": "Oct"
+              "eta": "2026-11-20",
+              "status": "dated",
+              "label": "Nov"
             }
           ],
           "blocker": ""
@@ -111,9 +74,9 @@
           "note": "",
           "segments": [
             {
-              "eta": "2026-11-16",
+              "eta": "2026-12-28",
               "status": "blocked",
-              "label": "Nov"
+              "label": "Q4"
             }
           ],
           "blocker": "Blocked by Dealers migrating their Twilio integration to github"
@@ -124,13 +87,26 @@
           "note": "HubSpot marketing email content only.",
           "segments": [
             {
-              "eta": "2026-11-26",
+              "eta": "2026-12-28",
               "status": "blocked",
               "label": "Q4"
             }
           ],
           "blocker": "Blocked until HubSpot's audience-variants beta is out. Raised by Dylan, no public API docs yet."
         }
+        {
+          "id": "legal",
+          "name": "3 · Legal content",
+          "note": "",
+          "segments": [
+            {
+              "eta": "2027-01-16",
+              "status": "tentative",
+              "label": "Q1 2027"
+            }
+          ],
+          "blocker": ""
+        },
       ]
     },
     {
@@ -146,7 +122,7 @@
           "segments": [
             {
               "eta": "2026-10-07",
-              "status": "dated",
+              "status": "shipped",
               "label": "Oct 7"
             }
           ],
