@@ -93,7 +93,7 @@
             }
           ],
           "blocker": "Blocked until HubSpot's audience-variants beta is out. Raised by Dylan, no public API docs yet."
-        }
+        },
         {
           "id": "legal",
           "name": "5 · Legal content",
@@ -106,7 +106,7 @@
             }
           ],
           "blocker": ""
-        },
+        }
       ]
     },
     {
