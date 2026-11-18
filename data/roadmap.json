@@ -70,7 +70,7 @@
         },
         {
           "id": "whatsapp",
-          "name": "4 · WhatsApp notifications (Twilio)",
+          "name": "3 · WhatsApp notifications (Twilio)",
           "note": "",
           "segments": [
             {
@@ -83,7 +83,7 @@
         },
         {
           "id": "hubspot-emails",
-          "name": "5 · HubSpot emails",
+          "name": "4 · HubSpot emails",
           "note": "HubSpot marketing email content only.",
           "segments": [
             {
@@ -96,7 +96,7 @@
         }
         {
           "id": "legal",
-          "name": "3 · Legal content",
+          "name": "5 · Legal content",
           "note": "",
           "segments": [
             {
